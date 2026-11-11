@@ -15,139 +15,267 @@
 
   <style>
     :root {
-      --bg: #03060c;
-      --table-mat: radial-gradient(ellipse at 50% 50%, #10192e 0%, #060913 100%);
-      --surface-glass: rgba(14, 21, 38, 0.78);
-      --surface-border: rgba(245, 179, 53, 0.25);
+      --bg-deep: #050811;
+      --bg-panel: #0c1222;
+      --bg-card: #121b30;
+      --bg-elevated: #18243f;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(245, 179, 53, 0.32);
       --gold: #f5b335;
-      --gold-light: #fef08a;
+      --gold-bright: #fde047;
       --gold-dark: #b45309;
-      --gold-glow: rgba(245, 179, 53, 0.4);
+      --gold-glow: rgba(245, 179, 53, 0.35);
       --crimson: #ef4444;
-      --crimson-glow: rgba(239, 68, 68, 0.5);
+      --crimson-glow: rgba(239, 68, 68, 0.45);
       --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.4);
       --sky: #38bdf8;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; user-select: none; }
+    
     body {
-      background-color: var(--bg);
+      background-color: var(--bg-deep);
       background-image: 
-        radial-gradient(circle at 50% -10%, rgba(245, 179, 53, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 50% 110%, rgba(16, 25, 46, 0.8) 0%, transparent 70%);
-      color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
+        radial-gradient(circle at 15% 15%, rgba(245, 179, 53, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.05) 0%, transparent 45%),
+        linear-gradient(180deg, #050811 0%, #090f1e 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
-    /* شريط التنقل الزجاجي */
+    /* ==================== HEADER ==================== */
     header {
-      background: rgba(6, 10, 20, 0.85); backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 28px;
-      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50;
+      background: rgba(8, 13, 26, 0.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 60;
     }
     .brand-wrap { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-    .brand-title { font-size: 1.45rem; font-weight: 900; letter-spacing: 0.5px; }
-    .brand-title span { color: var(--gold); text-shadow: 0 0 14px var(--gold-glow); }
+    .brand-title { font-size: 1.45rem; font-weight: 900; letter-spacing: 0.3px; }
+    .brand-title span { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
     .header-actions { display: flex; align-items: center; gap: 12px; }
     .user-pill {
-      background: rgba(20, 30, 52, 0.7); border: 1px solid var(--surface-border);
-      padding: 6px 16px; border-radius: 40px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .rank-shield {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #000;
-      font-size: 0.75rem; font-weight: 900; padding: 2px 10px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #050811;
+      font-size: 0.76rem;
+      font-weight: 900;
+      padding: 2px 10px;
+      border-radius: 99px;
     }
 
-    /* الحاويات والمشاهد */
-    .view { display: none; width: 100%; max-width: 1060px; margin: 20px auto; padding: 0 16px; }
-    .view.active { display: block; animation: smoothIn 0.35s ease forwards; }
-    @keyframes smoothIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* ==================== VIEWS ==================== */
+    .view { display: none; width: 100%; max-width: 1180px; margin: 22px auto; padding: 0 18px; }
+    .view.active { display: block; animation: viewEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes viewEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .glass-card {
-      background: var(--surface-glass); backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px;
-      padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative;
-    }
-
-    /* النماذج والأزرار */
-    label { font-size: 0.88rem; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; display: block; }
+    /* ==================== BUTTONS & INPUTS ==================== */
+    label { font-size: 0.88rem; font-weight: 800; color: var(--text-dim); margin-bottom: 8px; display: block; }
     input {
-      width: 100%; padding: 15px 18px; background: rgba(5, 8, 16, 0.9); border: 1px solid #1e293b;
-      border-radius: 14px; color: #fff; font-size: 1rem; margin-bottom: 18px; transition: all 0.25s ease;
+      width: 100%; padding: 14px 18px; background: #060a15; border: 1.5px solid #1e2b48;
+      border-radius: 14px; color: #fff; font-size: 1rem; margin-bottom: 16px; transition: 0.25s;
     }
-    input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 16px var(--gold-glow); }
+    input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 18px rgba(245, 179, 53, 0.2); }
 
     button {
-      cursor: pointer; padding: 13px 22px; border-radius: 14px; border: none; font-weight: 800;
+      cursor: pointer; padding: 12px 22px; border-radius: 14px; border: none; font-weight: 800;
       font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    button:active { transform: scale(0.97); }
+    button:active { transform: scale(0.96); }
     .btn-gold {
-      background: linear-gradient(135deg, #fde047, var(--gold) 45%, var(--gold-dark));
-      color: #070a12; box-shadow: 0 8px 24px var(--gold-glow);
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold) 50%, var(--gold-dark));
+      color: #050811; box-shadow: 0 8px 22px var(--gold-glow);
     }
-    .btn-gold:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    .btn-danger { background: linear-gradient(135deg, #f87171, var(--crimson)); color: #fff; box-shadow: 0 8px 20px var(--crimson-glow); }
-    .btn-outline { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: #e2e8f0; }
-    .btn-outline:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--gold); color: #fff; }
+    .btn-gold:hover { filter: brightness(1.08); transform: translateY(-2px); }
+    .btn-danger {
+      background: linear-gradient(135deg, #f87171, var(--crimson));
+      color: #fff; box-shadow: 0 8px 20px var(--crimson-glow);
+    }
+    .btn-emerald {
+      background: linear-gradient(135deg, #34d399, var(--emerald));
+      color: #04130e; box-shadow: 0 8px 20px var(--emerald-glow);
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: #e2e8f0;
+    }
+    .btn-outline:hover { background: rgba(255, 255, 255, 0.09); border-color: var(--gold); color: #fff; }
 
-    /* أنماط اللعب في اللوبي */
-    .modes-deck { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-    .mode-item {
-      background: linear-gradient(145deg, rgba(20, 30, 52, 0.8), rgba(9, 14, 26, 0.9));
-      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 26px;
-      cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
-      display: flex; flex-direction: column; justify-content: space-between;
+    /* ==================== AUTH VIEW ==================== */
+    .auth-box {
+      max-width: 440px; margin: 45px auto; background: var(--bg-panel);
+      border: 1px solid var(--border-gold); border-radius: 26px; padding: 34px 30px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(245, 179, 53, 0.08);
+      text-align: center;
     }
-    .mode-item:hover {
-      border-color: var(--gold); transform: translateY(-6px);
-      box-shadow: 0 16px 36px rgba(0,0,0,0.6), 0 0 25px rgba(245, 179, 53, 0.15);
+    .auth-crest {
+      width: 68px; height: 68px; margin: 0 auto 16px; border-radius: 20px;
+      background: radial-gradient(circle, rgba(245,179,53,0.2), rgba(180,83,9,0.05));
+      border: 1.5px solid var(--border-gold); display: flex; align-items: center; justify-content: center;
     }
-    .mode-icon { font-size: 2.2rem; margin-bottom: 12px; }
-    .mode-item h3 { color: #fff; margin-bottom: 8px; font-size: 1.25rem; font-weight: 800; }
-    .mode-item p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 22px; }
 
-    /* طاولة النزال ثلاثية الأبعاد */
+    /* ==================== PROFESSIONAL LOBBY ==================== */
+    .lobby-hero {
+      background: linear-gradient(135deg, rgba(24, 36, 63, 0.9) 0%, rgba(12, 18, 34, 0.95) 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 24px;
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+    }
+    .hero-profile { display: flex; align-items: center; gap: 18px; }
+    .hero-avatar {
+      width: 64px; height: 64px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 900; color: #050811;
+      box-shadow: 0 0 25px var(--gold-glow);
+    }
+    .hero-stats { display: flex; gap: 14px; flex-wrap: wrap; }
+    .stat-box {
+      background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle);
+      padding: 10px 18px; border-radius: 16px; text-align: center; min-width: 105px;
+    }
+    .stat-box .val { font-size: 1.3rem; font-weight: 900; color: var(--gold); display: block; }
+    .stat-box .lbl { font-size: 0.76rem; color: var(--text-dim); font-weight: 700; }
+
+    .lobby-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .lobby-grid { grid-template-columns: 1fr; } }
+
+    .modes-stack { display: flex; flex-direction: column; gap: 16px; }
+    .mode-banner {
+      background: var(--bg-panel);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 22px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.28s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .mode-banner.featured {
+      background: linear-gradient(135deg, rgba(35, 28, 15, 0.85) 0%, rgba(12, 18, 34, 0.95) 100%);
+      border-color: var(--border-gold);
+    }
+    .mode-banner:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.6);
+    }
+    .mode-info h3 { font-size: 1.28rem; font-weight: 900; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .mode-info p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.55; max-width: 440px; }
+    .badge-live {
+      font-size: 0.72rem; background: rgba(245, 179, 53, 0.2); color: var(--gold-bright);
+      border: 1px solid var(--gold); padding: 2px 9px; border-radius: 99px; font-weight: 800;
+    }
+
+    /* Quick Cards Reference Strip in Lobby */
+    .cards-preview-bar {
+      background: var(--bg-panel); border: 1px solid var(--border-subtle);
+      border-radius: 22px; padding: 20px; margin-top: 8px;
+    }
+    .mini-roles-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px;
+    }
+    @media (max-width: 550px) { .mini-roles-grid { grid-template-columns: 1fr; } }
+    .mini-role-pill {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; gap: 10px;
+    }
+    .mini-role-pill .icon { font-size: 1.4rem; }
+    .mini-role-pill h5 { font-size: 0.9rem; font-weight: 900; }
+    .mini-role-pill p { font-size: 0.76rem; color: var(--text-dim); }
+
+    /* Leaderboard Card */
+    .leaderboard-card {
+      background: var(--bg-panel); border: 1px solid var(--border-subtle);
+      border-radius: 24px; padding: 24px; box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+    }
+    .lb-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .lb-item {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .lb-item.top-1 { border-color: rgba(245, 179, 53, 0.5); background: linear-gradient(90deg, rgba(245,179,53,0.12), var(--bg-card)); }
+    .lb-rank { width: 28px; font-weight: 900; font-size: 1rem; color: var(--gold); }
+
+    /* ==================== BATTLE ARENA TABLE ==================== */
     .arena-table {
-      background: var(--table-mat);
-      border: 2px solid rgba(245, 179, 53, 0.3); border-radius: 36px; padding: 26px;
-      box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.9), 0 25px 60px rgba(0, 0, 0, 0.85);
+      background: radial-gradient(ellipse at 50% 50%, #131e38 0%, #070b16 75%, #04070e 100%);
+      border: 2px solid var(--border-gold);
+      border-radius: 32px;
+      padding: 22px;
+      box-shadow: inset 0 0 100px rgba(0,0,0,0.9), 0 25px 60px rgba(0,0,0,0.85);
       position: relative;
     }
 
-    /* شريط الوقت التنازلي التكتيكي */
-    .timer-track {
-      width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 6px;
-      margin: 12px 0; overflow: hidden; position: relative;
-    }
-    .timer-progress {
-      height: 100%; width: 100%; background: linear-gradient(90deg, var(--gold), var(--crimson));
-      transition: width 0.2s linear;
-    }
-
-    /* منطقة اللاعبين والبطاقات */
     .combat-zone {
-      background: rgba(10, 16, 30, 0.75); backdrop-filter: blur(12px);
-      border: 1.5px solid rgba(255, 255, 255, 0.08); border-radius: 24px;
-      padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
-      transition: all 0.35s ease; position: relative;
+      background: rgba(11, 17, 32, 0.82);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 22px;
+      padding: 14px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      transition: all 0.3s ease;
+      position: relative;
     }
     .combat-zone.turn-active {
       border-color: var(--gold);
-      box-shadow: 0 0 35px var(--gold-glow), inset 0 0 20px rgba(245, 179, 53, 0.1);
-      background: rgba(18, 28, 52, 0.9);
+      box-shadow: 0 0 30px rgba(245, 179, 53, 0.22), inset 0 0 20px rgba(245, 179, 53, 0.06);
+      background: rgba(18, 27, 50, 0.92);
     }
 
-    /* خزينة العملات الذهبية */
+    .fighter-meta { display: flex; align-items: center; gap: 14px; }
+    .turn-dot {
+      width: 12px; height: 12px; border-radius: 50%; background: #334155;
+      transition: 0.3s;
+    }
+    .turn-active .turn-dot {
+      background: var(--gold); box-shadow: 0 0 12px var(--gold);
+    }
+
     .gold-vault {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: linear-gradient(135deg, rgba(245, 179, 53, 0.18), rgba(180, 83, 9, 0.08));
-      border: 1.5px solid rgba(245, 179, 53, 0.4);
-      padding: 8px 18px; border-radius: 30px; color: var(--gold-light);
-      font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 10px var(--gold-glow);
-      transition: all 0.25s ease;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245, 179, 53, 0.14); border: 1.5px solid rgba(245, 179, 53, 0.4);
+      padding: 7px 16px; border-radius: 99px; color: var(--gold-bright);
+      font-weight: 900; font-size: 1.15rem; transition: 0.25s;
     }
     .gold-vault.shake-warn {
       border-color: var(--crimson) !important; color: #fca5a5 !important;
@@ -155,197 +283,245 @@
       animation: coinShake 0.45s both;
     }
     @keyframes coinShake {
-      10%, 90% { transform: translate3d(-3px, 0, 0); }
-      30%, 70% { transform: translate3d(-5px, 0, 0); }
-      20%, 80% { transform: translate3d(4px, 0, 0); }
+      20%, 80% { transform: translateX(5px); }
+      40%, 60% { transform: translateX(-5px); }
     }
 
-    /* بطاقات الهولوجرافيك Foil Cards */
-    .cards-row { display: flex; gap: 16px; position: relative; }
+    /* Cards in Hand */
+    .cards-row { display: flex; gap: 14px; }
     .card-frame {
-      width: 110px; height: 160px; border-radius: 16px;
-      border: 2px solid rgba(245, 179, 53, 0.3); background: #080c16;
-      position: relative; overflow: hidden; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;
+      width: 106px; height: 152px; border-radius: 15px;
+      border: 2px solid rgba(245, 179, 53, 0.32); background: #080d18;
+      position: relative; overflow: hidden; box-shadow: 0 10px 24px rgba(0,0,0,0.7);
+      transition: all 0.28s ease;
     }
-    .card-frame::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%);
-      transform: translateX(-100%); transition: transform 0.6s ease;
-    }
-    .card-frame:hover {
-      transform: translateY(-8px) scale(1.04);
-      border-color: var(--gold-light); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px var(--gold-glow);
-    }
-    .card-frame:hover::after { transform: translateX(100%); }
+    .card-frame:hover { transform: translateY(-6px) scale(1.03); border-color: var(--gold-bright); }
     .card-frame svg { width: 100%; height: 100%; display: block; }
     .card-frame.dead {
-      opacity: 0.2; filter: grayscale(1) blur(0.5px);
-      border-style: dashed; border-color: #64748b; transform: scale(0.88);
-      pointer-events: none;
+      opacity: 0.22; filter: grayscale(1); border-style: dashed; border-color: #64748b;
+      transform: scale(0.9); pointer-events: none;
+    }
+    .dead-stamp {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.55); color: var(--crimson); font-weight: 900; font-size: 0.85rem;
+      transform: rotate(-15deg);
     }
 
-    /* مركز التحكم وسجل العمليات */
-    .table-center {
-      margin: 18px 0; background: rgba(5, 8, 16, 0.92); border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px; padding: 18px 24px; min-height: 140px;
-      display: flex; flex-direction: column; justify-content: space-between;
+    /* Timer Strip */
+    .timer-track {
+      width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 6px;
+      margin: 12px 0; overflow: hidden;
     }
-    .log-stream { max-height: 95px; overflow-y: auto; font-size: 0.92rem; line-height: 1.8; color: var(--text-muted); }
-    .log-stream p:first-child {
-      color: #fff; font-weight: 800; border-right: 4px solid var(--gold); padding-right: 12px;
+    .timer-progress {
+      height: 100%; width: 100%; background: linear-gradient(90deg, var(--gold), var(--crimson));
+      transition: width 0.2s linear;
     }
 
-    /* شريط التشكيك والردود */
-    .reaction-hud {
-      margin-top: 14px; background: linear-gradient(90deg, #381219, #171d2e);
-      border: 2px solid rgba(239, 68, 68, 0.6); border-radius: 16px; padding: 14px 20px;
-      display: flex; justify-content: space-between; align-items: center; gap: 14px;
-      animation: alertPulse 1.8s infinite alternate;
+    /* ==================== VISUAL CENTER STAGE (منصة وسط الطاولة) ==================== */
+    .center-stage {
+      margin: 14px 0;
+      background: rgba(6, 10, 20, 0.92);
+      border: 1.5px solid rgba(245, 179, 53, 0.22);
+      border-radius: 24px;
+      padding: 20px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
     }
-    @keyframes alertPulse { from { box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); } to { box-shadow: 0 0 30px rgba(239, 68, 68, 0.5); } }
 
-    /* منصة الأوامر والحركات */
+    .stage-idle {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; margin: auto 0; gap: 8px;
+    }
+    .stage-idle-badge {
+      padding: 6px 18px; border-radius: 99px; background: rgba(245, 179, 53, 0.12);
+      border: 1px solid var(--border-gold); color: var(--gold-bright); font-weight: 800; font-size: 0.95rem;
+    }
+
+    /* Played Card Showcase in Center */
+    .stage-showcase {
+      display: flex; align-items: center; justify-content: center; gap: 24px;
+      flex-wrap: wrap; width: 100%; margin: auto 0;
+      animation: cardSlam 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes cardSlam {
+      from { opacity: 0; transform: scale(1.25) translateY(-15px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .played-card-visual {
+      width: 118px; height: 168px; border-radius: 16px;
+      border: 2.5px solid var(--gold); box-shadow: 0 0 35px rgba(245, 179, 53, 0.35);
+      overflow: hidden; background: #090e1a; flex-shrink: 0; position: relative;
+    }
+    .played-card-visual.shield-mode {
+      border-color: var(--emerald); box-shadow: 0 0 35px var(--emerald-glow);
+    }
+    .claim-tag-float {
+      position: absolute; top: 6px; right: 6px; left: 6px;
+      background: rgba(0,0,0,0.82); color: var(--gold-bright); font-size: 0.68rem;
+      font-weight: 900; text-align: center; padding: 2px 4px; border-radius: 6px;
+      border: 1px solid rgba(245,179,53,0.4);
+    }
+
+    .stage-details {
+      flex: 1; min-width: 250px; max-width: 520px; text-align: right;
+    }
+    .stage-actor-pill {
+      display: inline-block; background: rgba(239, 68, 68, 0.18); border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fca5a5; font-size: 0.8rem; font-weight: 800; padding: 3px 12px; border-radius: 99px; margin-bottom: 8px;
+    }
+    .stage-headline { font-size: 1.22rem; font-weight: 900; color: #fff; margin-bottom: 6px; }
+    .stage-effect-desc { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 14px; line-height: 1.5; }
+    .stage-reaction-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* Mini Log Ticker at Bottom of Stage */
+    .stage-log-bar {
+      width: 100%; border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-top: 12px;
+      display: flex; justify-content: space-between; align-items: center; font-size: 0.84rem; color: var(--text-dim);
+    }
+
+    /* ==================== COMMAND DECK ==================== */
     .command-deck {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 16px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; margin-top: 14px;
     }
     .btn-command {
-      background: linear-gradient(145deg, rgba(20, 30, 52, 0.85), rgba(10, 16, 28, 0.95));
-      border: 1.5px solid rgba(255, 255, 255, 0.08); border-radius: 16px;
-      padding: 14px 10px; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 6px;
-      transition: all 0.25s ease;
+      background: linear-gradient(145deg, #15203a, #0c1324);
+      border: 1.5px solid var(--border-subtle); border-radius: 16px;
+      padding: 12px 10px; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 5px;
     }
-    .btn-command:hover {
-      border-color: var(--gold); transform: translateY(-3px);
-      background: linear-gradient(145deg, rgba(30, 44, 76, 0.9), rgba(15, 22, 40, 0.95));
+    .btn-command:hover { border-color: var(--gold); transform: translateY(-3px); }
+    .btn-command.passive-guardian {
+      background: rgba(16, 185, 129, 0.06); border: 1.5px dashed rgba(16, 185, 129, 0.4);
+      cursor: help;
     }
-    .btn-command .tag {
-      font-size: 0.72rem; padding: 2px 8px; border-radius: 20px; font-weight: 700;
-    }
-    .tag-safe { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .tag-bluff { background: rgba(245, 179, 53, 0.15); color: #fde047; border: 1px solid rgba(245, 179, 53, 0.3); }
-    .tag-kill { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-command .tag { font-size: 0.72rem; padding: 2px 8px; border-radius: 99px; font-weight: 800; }
+    .tag-safe { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
+    .tag-bluff { background: rgba(245, 179, 53, 0.15); color: #fde047; }
+    .tag-kill { background: rgba(239, 68, 68, 0.18); color: #fca5a5; }
+    .tag-def { background: rgba(16, 185, 129, 0.22); color: #34d399; }
 
-    /* فقاعات التفاعل السريع (Emotes Floating) */
+    /* Emotes */
     .emote-bubble {
-      position: absolute; top: -35px; right: 20px; background: rgba(245, 179, 53, 0.95);
-      color: #000; font-weight: 900; font-size: 0.9rem; padding: 5px 14px; border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 10; animation: popEmote 2.5s forwards ease-out;
-      pointer-events: none;
+      position: absolute; top: -32px; right: 24px; background: var(--gold);
+      color: #050811; font-weight: 900; font-size: 0.88rem; padding: 5px 14px; border-radius: 99px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6); z-index: 20; animation: popEmote 2.5s forwards ease-out;
     }
     @keyframes popEmote {
       0% { opacity: 0; transform: translateY(10px) scale(0.8); }
       15% { opacity: 1; transform: translateY(0) scale(1); }
       80% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 0; transform: translateY(-18px); }
     }
-
-    /* شريط التعبيرات بالأسفل */
-    .emotes-strip {
-      display: flex; gap: 8px; margin-top: 10px; justify-content: center;
-    }
+    .emotes-strip { display: flex; gap: 8px; margin-top: 12px; justify-content: center; flex-wrap: wrap; }
     .btn-emote {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      padding: 6px 12px; border-radius: 12px; font-size: 0.82rem; color: #cbd5e1;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+      padding: 6px 12px; border-radius: 99px; font-size: 0.8rem; color: #cbd5e1;
     }
-    .btn-emote:hover { background: rgba(245, 179, 53, 0.15); border-color: var(--gold); color: #fff; }
+    .btn-emote:hover { border-color: var(--gold); color: #fff; background: rgba(245,179,53,0.12); }
 
-    /* رادار البحث السحابي المطور */
+    /* ==================== MODALS & TOAST ==================== */
     .overlay-screen {
-      position: fixed; inset: 0; background: rgba(2, 4, 8, 0.88); backdrop-filter: blur(12px);
-      display: none; align-items: center; justify-content: center; z-index: 100;
+      position: fixed; inset: 0; background: rgba(3, 6, 13, 0.88); backdrop-filter: blur(12px);
+      display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px;
     }
-    .radar-console {
-      background: linear-gradient(145deg, #0d1424, #060912); border: 1.5px solid rgba(245, 179, 53, 0.35);
-      border-radius: 28px; padding: 40px 32px; width: 90%; max-width: 420px; text-align: center;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(245, 179, 53, 0.15);
+    .modal-card {
+      background: var(--bg-panel); border: 1.5px solid var(--border-gold);
+      border-radius: 28px; padding: 34px 28px; width: 100%; max-width: 460px; text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
     }
     .radar-sweep {
-      width: 120px; height: 120px; border-radius: 50%; border: 2px dashed var(--gold);
-      margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; position: relative;
+      width: 110px; height: 110px; border-radius: 50%; border: 2px dashed var(--gold);
+      margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative;
       animation: radarRotate 4s linear infinite;
     }
     @keyframes radarRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .radar-wave {
-      position: absolute; width: 100%; height: 100%; border-radius: 50%;
-      background: rgba(245, 179, 53, 0.15); animation: waveExpand 1.8s ease-out infinite;
-    }
-    @keyframes waveExpand { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
 
-    /* التنبيه العائم */
     #hudToast {
-      position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%) translateY(50px);
-      background: rgba(14, 21, 38, 0.95); backdrop-filter: blur(12px);
-      border: 1.5px solid var(--surface-border); padding: 14px 28px; border-radius: 40px;
-      display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1rem;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.7); opacity: 0; pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 120;
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px);
+      background: rgba(12, 18, 34, 0.96); border: 1.5px solid var(--border-gold);
+      padding: 12px 26px; border-radius: 99px; display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 0.95rem; box-shadow: 0 16px 40px rgba(0,0,0,0.75);
+      opacity: 0; pointer-events: none; transition: 0.3s; z-index: 150;
     }
     #hudToast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
-    #hudToast.error { border-color: var(--crimson); color: #fca5a5; box-shadow: 0 0 25px var(--crimson-glow); }
-    #hudToast.warn { border-color: var(--gold); color: #fde047; box-shadow: 0 0 25px var(--gold-glow); }
-
-    /* لوحة الصدارة */
-    .esports-table { width: 100%; border-collapse: collapse; margin-top: 18px; }
-    .esports-table th { padding: 14px; text-align: right; color: var(--gold); font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .esports-table td { padding: 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.95rem; font-weight: 700; }
-    .esports-table tr:hover { background: rgba(245, 179, 53, 0.04); }
+    #hudToast.error { border-color: var(--crimson); color: #fca5a5; }
   </style>
 </head>
 <body>
 
-  <!-- تنبيه عائم للمواقف الحرجة -->
+  <!-- إشعار سريع -->
   <div id="hudToast">
     <span id="toastSymbol">⚠️</span>
-    <span id="toastContent">إشعار نظام</span>
+    <span id="toastContent">إشعار</span>
   </div>
 
-  <!-- رادار البحث عن خصم حقيقي -->
+  <!-- نافذة رادار البحث في الرانكد -->
   <div id="radarModal" class="overlay-screen">
-    <div class="radar-console">
+    <div class="modal-card">
       <div class="radar-sweep">
-        <div class="radar-wave"></div>
-        <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#f5b335" stroke-width="2"/><path d="M12 2v20M2 12h20" stroke="#f5b335" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#f5b335" stroke-width="2"/><path d="M12 2v20M2 12h20" stroke="#f5b335" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
       </div>
-      <h3 style="color: var(--gold); font-size: 1.35rem; margin-bottom: 8px;">جاري فحص السحابة...</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px;">نبحث في طابور الرانكد عن لاعب حقيقي متصل</p>
-      <div style="font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 24px;">الوقت المنقضي: <span id="radarClock">00:00</span></div>
-      <button class="btn-danger" style="width: 100%; padding: 14px;" onclick="Matchmaking.cancelSearch()">إلغاء البحث ❌</button>
+      <h3 style="color: var(--gold); font-size: 1.35rem; margin-bottom: 8px;">جاري البحث عن خصم حقيقي...</h3>
+      <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 18px;">يتم فحص طابور السحابة لمطابقتك في معركة رانكد</p>
+      <div style="font-size: 1.3rem; font-weight: 900; margin-bottom: 24px;">الوقت: <span id="radarClock" style="color:var(--gold);">00:00</span></div>
+      <button class="btn-danger" style="width: 100%;" onclick="Matchmaking.cancelSearch()">إلغاء البحث ✖</button>
     </div>
   </div>
 
-  <!-- دليل وقواعد البطاقات المنبثق -->
+  <!-- نافذة نهاية المباراة السينمائية (بديل الـ alert) -->
+  <div id="resultModal" class="overlay-screen">
+    <div class="modal-card">
+      <div id="resIcon" style="font-size: 3.6rem; margin-bottom: 10px;">👑</div>
+      <h2 id="resTitle" style="font-size: 1.7rem; font-weight: 900; color: var(--gold); margin-bottom: 8px;">انتصار ساحق!</h2>
+      <p id="resDesc" style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 18px;">تم القضاء على جميع بطاقات الخصم.</p>
+      <div id="resEloPill" style="display:inline-block; padding: 8px 20px; border-radius:99px; background:rgba(245,179,53,0.15); border:1px solid var(--gold); color:var(--gold-bright); font-weight:900; margin-bottom: 24px;">
+        +30 ELO
+      </div>
+      <button class="btn-gold" style="width: 100%;" onclick="Game.closeResultModal()">العودة إلى اللوبي الرئيسي</button>
+    </div>
+  </div>
+
+  <!-- نافذة شرح القواعد ووظيفة الحارس -->
   <div id="codexModal" class="overlay-screen">
-    <div class="glass-card" style="max-width: 500px; width: 92%;">
-      <h3 style="color: var(--gold); font-size: 1.3rem; margin-bottom: 14px;">📖 دليل البطاقات والقدرات التكتيكية</h3>
-      <div style="font-size: 0.9rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 20px;">
-        <p><strong style="color: #ef4444;">☠️ القاتل (3 عملات):</strong> يدمر بطاقة للخصم. يُصد فقط بالحارس.</p>
-        <p><strong style="color: #38bdf8;">🗡️ اللص:</strong> يسرق 2 عملة من رصيد الخصم. يُصد بالحارس.</p>
-        <p><strong style="color: #f5b335;">⚖️ التاجر:</strong> يسحب 3 عملات ذهبية مجانية من البنك.</p>
-        <p><strong style="color: #10b981;">🛡️ الحارس:</strong> بطاقة دفاعية تمنع هجوم القاتل وسرقة اللص تماماً.</p>
-        <p><strong style="color: #fca5a5;">💥 الضربة القاضية (7 عملات):</strong> تدمير بطاقة حتمية لا تُرد ولا يمكن التشكيك بها.</p>
+    <div class="modal-card" style="max-width: 540px; text-align: right;">
+      <h3 style="color: var(--gold); font-size: 1.35rem; margin-bottom: 14px; text-align: center;">📖 دليل البطاقات وفائدة «الحارس»</h3>
+      <div style="font-size: 0.92rem; line-height: 1.85; color: #e2e8f0; margin-bottom: 22px; display:flex; flex-direction:column; gap:10px;">
+        <div style="background:rgba(16,185,129,0.1); border:1px solid var(--emerald); padding:12px; border-radius:14px;">
+          <strong style="color: #34d399; font-size:1rem;">🛡️ ما هي فائدة بطاقة الحارس؟</strong>
+          <p style="color:var(--text-dim); font-size:0.86rem; margin-top:4px;">
+            الحارس بطاقة <b>دفاعية</b>؛ لا تضغط عليها في دورك، بل عندما يهاجمك الخصم بـ <b>اللص</b> أو <b>القاتل</b> يظهر لك زر ذهبي <b>«صدّ بالحارس 🛡️»</b> ليبطل هجومه ويحميك! (ويمكنك التظاهر بامتلاك الحارس وخداع خصمك، لكن احذر أن يكشف كذبتك!).
+          </p>
+        </div>
+        <p><strong style="color: #ef4444;">☠️ القاتل (يدفع 3 عملات):</strong> يدمر بطاقة للخصم. يُصد فقط بالحارس.</p>
+        <p><strong style="color: #38bdf8;">🗡️ اللص (مجاناً):</strong> يسرق عملتين من الخصم. يُصد فقط بالحارس.</p>
+        <p><strong style="color: #f5b335;">⚖️ التاجر (مجاناً):</strong> يسحب 3 عملات من البنك ولا يمكن صده (يمكن فقط تكذيبه).</p>
+        <p><strong style="color: #fca5a5;">💥 الضربة القاضية (7 عملات):</strong> تدمر بطاقة للخصم فوراً؛ لا يمكن صدها ولا التشكيك بها.</p>
       </div>
-      <button class="btn-gold" style="width: 100%;" onclick="document.getElementById('codexModal').style.display='none'">فهمت القواعد 👍</button>
+      <button class="btn-gold" style="width: 100%;" onclick="document.getElementById('codexModal').style.display='none'">واضح، لنبدأ اللعب!</button>
     </div>
   </div>
 
-  <!-- رأس الصفحة -->
+  <!-- الشريط العلوي -->
   <header>
     <div class="brand-wrap" onclick="View.to('viewLobby')">
       <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
         <rect width="40" height="40" rx="10" fill="url(#brandGrad)"/>
-        <path d="M12 28L20 12L28 28H12Z" stroke="#03060c" stroke-width="3" stroke-linejoin="round"/>
-        <circle cx="20" cy="23" r="2.5" fill="#03060c"/>
+        <path d="M12 28L20 11L28 28H12Z" stroke="#050811" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="20" cy="23" r="2.5" fill="#050811"/>
         <defs>
           <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40">
-            <stop stop-color="#f5b335"/><stop offset="1" stop-color="#b45309"/>
+            <stop stop-color="#fde047"/><stop offset="1" stop-color="#b45309"/>
           </linearGradient>
         </defs>
       </svg>
       <div class="brand-title">حرب <span>الخداع</span></div>
     </div>
     <div class="header-actions">
-      <button class="btn-outline" style="padding: 6px 14px; font-size: 0.85rem;" onclick="document.getElementById('codexModal').style.display='flex'">📖 الدليل</button>
+      <button class="btn-outline" style="padding: 7px 14px; font-size: 0.85rem;" onclick="document.getElementById('codexModal').style.display='flex'">🛡️ كيف يعمل الحارس واللعب؟</button>
       <div class="user-pill">
         <span id="userNameBadge">غير مسجل</span>
         <span class="rank-shield" id="userEloBadge">1000 ELO</span>
@@ -353,189 +529,243 @@
     </div>
   </header>
 
-  <!-- المشهد 1: الحساب والتسجيل -->
+  <!-- ==================== VIEW 1: AUTH ==================== -->
   <div id="viewAuth" class="view active">
-    <div class="glass-card" style="max-width: 440px; margin: 40px auto;">
-      <h2 style="color: var(--gold); margin-bottom: 6px; font-size: 1.5rem;">حساب المحارب السحابي</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">
-        الاسم يُحفظ في قاعدة البيانات السحابية برمز مرور سري؛ لن يستطيع أحد تكراره أو اللعب به.
+    <div class="auth-box">
+      <div class="auth-crest">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z" stroke="#f5b335" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="#f5b335" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h2 style="color: var(--gold); font-size: 1.55rem; font-weight: 900; margin-bottom: 6px;">بوابة المحاربين</h2>
+      <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 24px;">
+        اختر اسماً فريداً ورمز مرور سرياً لحفظ نقاطك وتصنيفك في السحابة.
       </p>
 
-      <label>اسم المستخدم (فريد)</label>
-      <input type="text" id="authUsername" placeholder="مثال: القناص_عمر" maxlength="16" />
+      <div style="text-align: right;">
+        <label>اسم المحارب (فريد)</label>
+        <input type="text" id="authUsername" placeholder="مثال: عمر_كاسبر" maxlength="16" />
 
-      <label>رمز المرور السري</label>
-      <input type="password" id="authPasscode" placeholder="••••••••" />
+        <label>رمز المرور السري</label>
+        <input type="password" id="authPasscode" placeholder="••••••••" />
+      </div>
 
-      <button class="btn-gold" style="width: 100%;" onclick="Auth.submit()">دخول إلى الساحة</button>
+      <button class="btn-gold" style="width: 100%; margin-top: 6px;" onclick="Auth.submit()">دخول إلى الساحة ⚔️</button>
     </div>
   </div>
 
-  <!-- المشهد 2: الصالة الرئيسية -->
+  <!-- ==================== VIEW 2: PRO LOBBY ==================== -->
   <div id="viewLobby" class="view">
-    <div class="glass-card">
-      <h2 style="font-size: 1.6rem; font-weight: 900;">اختر طور النزال</h2>
-      
-      <div class="modes-deck">
-        <div class="mode-item" onclick="Matchmaking.startRankedSearch()">
-          <div>
-            <div class="mode-icon">🔥</div>
-            <h3>رانكد تنافسي مباشر</h3>
-            <p>بحث مباشر ضد لاعبين حقيقيين ينتظرون في السحابة. الفوز يرفع تقييمك ورتبتك عالمياً.</p>
+    
+    <!-- شريط معلومات اللاعب الاحترافي -->
+    <div class="lobby-hero">
+      <div class="hero-profile">
+        <div class="hero-avatar" id="lobbyAvatar">ع</div>
+        <div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+            <h2 id="lobbyName" style="font-size: 1.45rem; font-weight: 900;">المحارب</h2>
+            <span class="rank-shield" id="lobbyTier">🛡️ مبتدئ برونزي</span>
           </div>
-          <button class="btn-gold" style="width: 100%;">بحث عن خصم (Ranked)</button>
-        </div>
-
-        <div class="mode-item" onclick="document.getElementById('customRoomBox').style.display = 'block'">
-          <div>
-            <div class="mode-icon">👥</div>
-            <h3>مبارزة صديق خاصة</h3>
-            <p>أنشئ غرفة برمز سري وأرسله لصديقك لتلعبا معاً من جهازين مختلفين فوراً.</p>
-          </div>
-          <button class="btn-outline" style="width: 100%;">غرفة برمز</button>
-        </div>
-
-        <div class="mode-item" onclick="Game.startPracticeBot()">
-          <div>
-            <div class="mode-icon">🤖</div>
-            <h3>ساحة التدريب</h3>
-            <p>تدرب ضد الذكاء الاصطناعي لاختبار خدعك وقدرتك على قراءة الأوراق دون إنترنت.</p>
-          </div>
-          <button class="btn-outline" style="width: 100%;">بدء تدريب فردي</button>
+          <p style="font-size: 0.86rem; color: var(--text-dim);">اكذب بثقة، اقرأ تحركات خصمك، واصعد لقمة المتصدرين.</p>
         </div>
       </div>
 
-      <div id="customRoomBox" style="display: none; background: rgba(5, 8, 16, 0.95); padding: 22px; border-radius: 18px; border: 1.5px solid var(--surface-border); margin-top: 22px;">
-        <h4 style="color: var(--gold); margin-bottom: 10px;">إنشاء أو دخول غرفة خاصة برمز</h4>
-        <div style="display: flex; gap: 12px;">
-          <input type="text" id="customRoomCode" placeholder="اكتب رمز الغرفة (مثلاً: 7788)" style="margin-bottom: 0;" />
-          <button class="btn-gold" onclick="Matchmaking.joinPrivateRoom()">دخول الغرفة</button>
-          <button class="btn-outline" onclick="document.getElementById('customRoomBox').style.display = 'none'">إلغاء</button>
+      <div class="hero-stats">
+        <div class="stat-box">
+          <span class="val" id="statElo">1000</span>
+          <span class="lbl">تقييم ELO</span>
+        </div>
+        <div class="stat-box">
+          <span class="val" id="statWins" style="color:var(--emerald);">0</span>
+          <span class="lbl">الانتصارات</span>
+        </div>
+        <div class="stat-box">
+          <span class="val" id="statLosses" style="color:var(--crimson);">0</span>
+          <span class="lbl">الهزائم</span>
         </div>
       </div>
     </div>
 
-    <!-- لوحة المتصدرين السحابية -->
-    <div class="glass-card" style="margin-top: 24px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-        <h3 style="color: var(--gold); font-size: 1.3rem;">🏆 لوحة المتصدرين العالمية (Global Top 10)</h3>
-        <button class="btn-outline" style="padding: 6px 14px; font-size: 0.85rem;" onclick="Auth.fetchLeaderboard()">تحديث 🔄</button>
+    <!-- شبكة اللوبي الرئيسية -->
+    <div class="lobby-grid">
+      
+      <!-- العمود الأيمن: أطوار اللعب + ملخص البطاقات -->
+      <div class="modes-stack">
+        
+        <!-- الطور 1: الرانكد -->
+        <div class="mode-banner featured">
+          <div class="mode-info">
+            <h3>🔥 اللعب المصنف (Ranked Arena) <span class="badge-live">مباشر أونلاين</span></h3>
+            <p>مواجهة رسمية ضد لاعبين حقيقيين عبر السحابة. الفوز يمنحك +30 نقطة ELO ويرفع مركزك في قائمة المتصدرين.</p>
+          </div>
+          <button class="btn-gold" onclick="Matchmaking.startRankedSearch()">بحث عن خصم ⚔️</button>
+        </div>
+
+        <!-- الطور 2: غرفة صديق -->
+        <div class="mode-banner" style="flex-direction: column; align-items: stretch;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+            <div class="mode-info">
+              <h3>👥 تحدي صديق (غرفة خاصة)</h3>
+              <p>أنشئ رمز غرفة وأرسله لصديقك، أو ادخل برمزه للعب سوياً أونلاين بدون خسارة نقاط الرانكد.</p>
+            </div>
+            <button class="btn-outline" onclick="LobbyUI.toggleRoomDrawer()">فتح الغرفة الخاصة 🔑</button>
+          </div>
+
+          <div id="customRoomBox" style="display: none; border-top: 1px solid var(--border-subtle); padding-top: 16px; margin-top: 8px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <input type="text" id="customRoomCode" placeholder="اكتب كود الغرفة (مثلاً: 5599)" style="margin-bottom: 0; flex:1; min-width: 180px;" />
+              <button class="btn-gold" onclick="Matchmaking.joinPrivateRoom()">إنشاء / دخول الغرفة</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- الطور 3: البوت الذكي -->
+        <div class="mode-banner">
+          <div class="mode-info">
+            <h3>🤖 ساحة التدريب الذكي (AI Bot)</h3>
+            <p>جرّب استراتيجيات الخداع وتدرّب على استخدام درع الحارس وكشف الكذب ضد ذكاء اصطناعي تكتيكي.</p>
+          </div>
+          <button class="btn-outline" onclick="Game.startPracticeBot()">بدء تدريب فوري 🎯</button>
+        </div>
+
+        <!-- شريط البطاقات الأربعة المختصر -->
+        <div class="cards-preview-bar">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:900; color:var(--gold); font-size:0.95rem;">🃏 بطاقات اللعبة الأربعة (تذكير سريع):</span>
+            <span style="font-size:0.78rem; color:var(--text-dim);">تستطيع ادعاء أي بطاقة حتى لو لم تكن بيدك!</span>
+          </div>
+          <div class="mini-roles-grid">
+            <div class="mini-role-pill">
+              <span class="icon">⚖️</span>
+              <div><h5>التاجر</h5><p>يسحب +3 عملات من البنك</p></div>
+            </div>
+            <div class="mini-role-pill">
+              <span class="icon">🗡️</span>
+              <div><h5>اللص</h5><p>يسرق 2 عملة من الخصم</p></div>
+            </div>
+            <div class="mini-role-pill">
+              <span class="icon">☠️</span>
+              <div><h5>القاتل (3 عملات)</h5><p>يدمر بطاقة للخصم</p></div>
+            </div>
+            <div class="mini-role-pill" style="border-color:rgba(16,185,129,0.35); background:rgba(16,185,129,0.06);">
+              <span class="icon">🛡️</span>
+              <div><h5 style="color:#34d399;">الحارس (درع دفاعي)</h5><p>يصد هجوم اللص والقاتل عنك!</p></div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <table class="esports-table">
-        <thead>
-          <tr>
-            <th>المركز</th>
-            <th>اللاعب</th>
-            <th>التقييم (ELO)</th>
-            <th>الانتصارات</th>
-            <th>الرتبة</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardRows">
-          <!-- ديناميكي من السحابة -->
-        </tbody>
-      </table>
+
+      <!-- العمود الأيسر: قائمة المتصدرين -->
+      <div class="leaderboard-card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="color: var(--gold); font-size: 1.2rem; font-weight: 900;">🏆 نخبة المتصدرين (Top 10)</h3>
+          <button class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="Auth.fetchLeaderboard()">تحديث 🔄</button>
+        </div>
+        <div class="lb-list" id="leaderboardRows">
+          <!-- يتم تعبئتها من Firebase -->
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- المشهد 3: حلبة المعركة ثلاثية الأبعاد -->
+  <!-- ==================== VIEW 3: BATTLE ARENA ==================== -->
   <div id="viewGame" class="view">
     <div class="arena-table">
       
-      <!-- منطقة الخصم -->
+      <!-- منطقة الخصم العليا -->
       <div class="combat-zone" id="zoneOpp">
         <div id="oppEmoteContainer"></div>
-        <div>
-          <h3 id="oppNameDisplay" style="font-size: 1.2rem; font-weight: 800;">الخصم الحقيقي</h3>
-          <span id="oppSubDisplay" style="font-size: 0.8rem; color: var(--text-muted);">لاعب متصل</span>
+        <div class="fighter-meta">
+          <div class="turn-dot"></div>
+          <div>
+            <h3 id="oppNameDisplay" style="font-size: 1.18rem; font-weight: 900;">الخصم</h3>
+            <span id="oppSubDisplay" style="font-size: 0.78rem; color: var(--text-dim);">منافس</span>
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 18px;">
-          <div class="gold-vault" id="oppVault">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#f5b335"/><circle cx="12" cy="12" r="7" stroke="#b45309" stroke-width="1.5"/><text x="12" y="16" font-size="11" font-weight="900" fill="#78350f" text-anchor="middle">G</text></svg>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="gold-vault" id="oppVault" title="عملات الخصم">
+            <span>🪙</span>
             <span id="oppCoinsCount">2</span>
           </div>
-          <div class="cards-row" id="oppCardsDeck">
-            <!-- كروت الخصم الهولوجرافيك -->
-          </div>
+          <div class="cards-row" id="oppCardsDeck"></div>
         </div>
       </div>
 
-      <!-- شريط عداد الوقت للجولة -->
+      <!-- شريط عداد الوقت -->
       <div class="timer-track">
         <div class="timer-progress" id="turnTimerBar"></div>
       </div>
 
-      <!-- مركز الطاولة وسجل العمليات -->
-      <div class="table-center">
-        <div class="log-stream" id="battleLogStream">
-          <p>بدأت المواجهة التكتيكية! كذب الخصم يسلبه حياته، وتشكيكك الخاطئ يقضي عليك.</p>
+      <!-- منصة وسط الطاولة التفاعلية (تُظهر البطاقة الملعوبة أمامك بوضوح!) -->
+      <div class="center-stage">
+        <div id="stageDynamicContent" style="width: 100%; display: flex; justify-content: center;">
+          <!-- يتغير ديناميكياً حسب حالة الدور أو البطاقة الملعوبة -->
         </div>
 
-        <!-- شريط التشكيك والردود السريعة -->
-        <div id="reactionHud" style="display: none;" class="reaction-hud">
-          <span id="reactionTextNotice" style="font-size: 1rem; font-weight: 800;">الخصم يزعم امتلاك صفة معينة!</span>
-          <div style="display: flex; gap: 10px;">
-            <button class="btn-outline" style="padding: 10px 16px;" onclick="Game.submitReaction('pass')">قبول الحركة</button>
-            <button class="btn-danger" style="padding: 10px 18px;" onclick="Game.submitReaction('challenge')">كاذب! (تشكيك) 🚨</button>
-            <button class="btn-gold" id="btnBlockOption" style="padding: 10px 16px; display: none;" onclick="Game.submitReaction('block')">صد بالحارس 🛡️</button>
-          </div>
+        <div class="stage-log-bar">
+          <span id="lastLogLine">✨ بدأت المواجهة! راقب البطاقات الملعوبة في وسط الطاولة.</span>
+          <span style="color:var(--gold); font-weight:700;" id="matchModeTag">مباراة تكتيكية</span>
         </div>
       </div>
 
-      <!-- منطقة اللاعب الخاص بك -->
+      <!-- منطقة اللاعب السفلى -->
       <div class="combat-zone turn-active" id="zoneMe">
         <div id="myEmoteContainer"></div>
-        <div>
-          <h3 id="myNameDisplay" style="font-size: 1.2rem; font-weight: 800;">أنت</h3>
-          <span id="mySubDisplay" style="font-size: 0.8rem; color: var(--gold);">المحارب التكتيكي</span>
+        <div class="fighter-meta">
+          <div class="turn-dot"></div>
+          <div>
+            <h3 id="myNameDisplay" style="font-size: 1.18rem; font-weight: 900;">أنت</h3>
+            <span id="mySubDisplay" style="font-size: 0.78rem; color: var(--gold);">بطاقاتك السرية (مكشوفة لك فقط)</span>
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 18px;">
-          <div class="gold-vault" id="myVault">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#f5b335"/><circle cx="12" cy="12" r="7" stroke="#b45309" stroke-width="1.5"/><text x="12" y="16" font-size="11" font-weight="900" fill="#78350f" text-anchor="middle">G</text></svg>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="gold-vault" id="myVault" title="عملاتك الذهبية">
+            <span>🪙</span>
             <span id="myCoinsCount">2</span>
           </div>
-          <div class="cards-row" id="myCardsDeck">
-            <!-- كروتي المكشوفة -->
-          </div>
+          <div class="cards-row" id="myCardsDeck"></div>
         </div>
       </div>
 
-      <!-- منصة الأوامر والقرارات -->
-      <div style="margin-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 16px;">
+      <!-- لوحة أوامر اللاعب -->
+      <div style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <span id="turnNoticeHeader" style="font-weight: 900; color: var(--gold); font-size: 1.05rem;">دورك الآن: حدد ادعاءك أو حركتك الحتمية</span>
-          <button class="btn-outline" style="padding: 6px 14px; font-size: 0.85rem;" onclick="Game.surrender()">انسحاب</button>
+          <span id="turnNoticeHeader" style="font-weight: 900; color: var(--gold); font-size: 1rem;">دورك الآن: اختر حركة حقيقية أو اكذب ببطاقة!</span>
+          <button class="btn-outline" style="padding: 5px 14px; font-size: 0.8rem;" onclick="Game.surrender()">انسحاب 🏳️</button>
         </div>
 
         <div class="command-deck" id="commandGrid">
           <button class="btn-command" onclick="Game.dispatch('income')">
-            <span style="font-size:1.05rem; font-weight:900;">💵 دخل عادي</span>
-            <span class="tag tag-safe">+1 ذهب (آمن)</span>
+            <span style="font-size:1rem; font-weight:900;">💵 دخل عادي</span>
+            <span class="tag tag-safe">+1 ذهب (مضمون)</span>
           </button>
           <button class="btn-command" onclick="Game.dispatch('merchant')">
-            <span style="font-size:1.05rem; font-weight:900;">⚖️ التاجر</span>
-            <span class="tag tag-bluff">+3 ذهب (ادعاء)</span>
+            <span style="font-size:1rem; font-weight:900;">⚖️ لعب التاجر</span>
+            <span class="tag tag-bluff">يسحب +3 ذهب</span>
           </button>
           <button class="btn-command" onclick="Game.dispatch('thief')">
-            <span style="font-size:1.05rem; font-weight:900;">🗡️ اللص</span>
-            <span class="tag tag-bluff">سرقة 2 ذهب</span>
+            <span style="font-size:1rem; font-weight:900;">🗡️ لعب اللص</span>
+            <span class="tag tag-bluff">يسرق 2 ذهب</span>
           </button>
           <button class="btn-command" onclick="Game.dispatch('assassin')">
-            <span style="font-size:1.05rem; font-weight:900;">☠️ القاتل</span>
-            <span class="tag tag-kill">اغتيال (3 ذهب)</span>
+            <span style="font-size:1rem; font-weight:900;">☠️ لعب القاتل</span>
+            <span class="tag tag-kill">اغتيال (بتكلفة 3 ذهب)</span>
           </button>
-          <button class="btn-command" style="border-color: rgba(239, 68, 68, 0.5);" onclick="Game.dispatch('strike')">
-            <span style="font-size:1.05rem; font-weight:900; color:#fca5a5;">💥 ضربة قاضية</span>
-            <span class="tag tag-kill">حتمية (7 ذهب)</span>
+          <button class="btn-command" style="border-color: rgba(239, 68, 68, 0.45);" onclick="Game.dispatch('strike')">
+            <span style="font-size:1rem; font-weight:900; color:#fca5a5;">💥 ضربة قاضية</span>
+            <span class="tag tag-kill">حتمية (بتكلفة 7 ذهب)</span>
           </button>
+          <div class="btn-command passive-guardian" onclick="triggerHudToast('الحارس بطاقة دفاعية! يظهر زرها تلقائياً في وسط الطاولة عندما يهاجمك الخصم باللص أو القاتل.')">
+            <span style="font-size:0.95rem; font-weight:900; color:#34d399;">🛡️ درع الحارس</span>
+            <span class="tag tag-def">يُفعّل تلقائياً عند تعرضك للهجوم</span>
+          </div>
         </div>
 
-        <!-- شريط التعبيرات السريعة -->
         <div class="emotes-strip">
-          <button class="btn-emote" onclick="Game.sendEmote('أنا لا أكذب!')">😎 أنا لا أكذب!</button>
-          <button class="btn-emote" onclick="Game.sendEmote('أنت مكشوف!')">🧐 أنت مكشوف!</button>
-          <button class="btn-emote" onclick="Game.sendEmote('شكك إن كنت تجرؤ..')">😏 شكك إن كنت تجرؤ..</button>
-          <button class="btn-emote" onclick="Game.sendEmote('ضربة معلم!')">🔥 ضربة معلم!</button>
+          <button class="btn-emote" onclick="Game.sendEmote('😎 البطاقة معي فعلاً!')">😎 البطاقة معي فعلاً!</button>
+          <button class="btn-emote" onclick="Game.sendEmote('🧐 حركتك مريبة جداً..')">🧐 حركتك مريبة جداً..</button>
+          <button class="btn-emote" onclick="Game.sendEmote('😏 اتحداك تضغط كاذب!')">😏 اتحداك تضغط كاذب!</button>
+          <button class="btn-emote" onclick="Game.sendEmote('🛡️ الحارس بالمرصاد!')">🛡️ الحارس بالمرصاد!</button>
         </div>
       </div>
 
@@ -544,7 +774,7 @@
 
   <script>
     /* =========================================================================
-       1. الربط بقاعدة بياناتك ومحرك الأصوات النيونية (Web Audio Synth)
+       1. إعدادات السحابة والصوتيات
        ========================================================================= */
     const firebaseConfig = {
       apiKey: "AIzaSyBR_ZuUYW1AJBDHPcclCkjEvmd6J1F_Arc",
@@ -570,7 +800,7 @@
           const gain = this.ctx.createGain();
           osc.type = type;
           osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -578,109 +808,128 @@
           osc.stop(this.ctx.currentTime + duration);
         } catch(e){}
       },
-      click() { this.beep(460, 'sine', 0.06); },
+      click() { this.beep(480, 'sine', 0.06); },
+      cardPlay() { this.beep(340, 'triangle', 0.14); setTimeout(()=>this.beep(520, 'sine', 0.12), 70); },
       coin() { this.beep(980, 'triangle', 0.22); },
-      error() { this.beep(150, 'sawtooth', 0.3); },
-      slash() { this.beep(125, 'sawtooth', 0.35); },
+      shield() { this.beep(620, 'sine', 0.25); },
+      error() { this.beep(150, 'sawtooth', 0.28); },
+      slash() { this.beep(120, 'sawtooth', 0.35); },
       win() { this.beep(520, 'sine', 0.15); setTimeout(()=>this.beep(780, 'sine', 0.35), 140); }
     };
 
     function triggerHudToast(msg, isError = false) {
       const toast = document.getElementById("hudToast");
       document.getElementById("toastContent").innerText = msg;
-      document.getElementById("toastSymbol").innerText = isError ? "❌" : "⚠️";
-      toast.className = isError ? "error active" : "warn active";
+      document.getElementById("toastSymbol").innerText = isError ? "❌" : "💡";
+      toast.className = isError ? "error active" : "active";
 
       if (isError) {
         SFX.error();
         const myVault = document.getElementById("myVault");
-        myVault.classList.add("shake-warn");
-        setTimeout(() => myVault.classList.remove("shake-warn"), 500);
+        if (myVault) {
+          myVault.classList.add("shake-warn");
+          setTimeout(() => myVault.classList.remove("shake-warn"), 500);
+        }
       }
-
-      setTimeout(() => { toast.classList.remove("active"); }, 2800);
+      setTimeout(() => { toast.classList.remove("active"); }, 3200);
     }
 
+    const LobbyUI = {
+      toggleRoomDrawer() {
+        SFX.click();
+        const box = document.getElementById("customRoomBox");
+        box.style.display = (box.style.display === "none") ? "block" : "none";
+      }
+    };
+
     /* =========================================================================
-       2. تصاميم SVG الفاخرة للبطاقات (Foil Effect Deck)
+       2. رسومات البطاقات الأربعة + ظهر البطاقة (SVG)
        ========================================================================= */
+    const ROLE_META = {
+      assassin: {
+        name: "القاتل",
+        sub: "يدمر بطاقة للخصم",
+        actionTitle: "شنّ هجوم اغتيال ببطاقة [القاتل]!",
+        actionDesc: "يريد تدمير إحدى بطاقاتك (دفع 3 عملات). يمكنك صده بـ «الحارس 🛡️» أو اتهامه بالكذب!"
+      },
+      thief: {
+        name: "اللص",
+        sub: "يسرق 2 ذهب",
+        actionTitle: "رمى بطاقة [اللص] على الطاولة!",
+        actionDesc: "يريد سرقة عملتين ذهبيتين من خزينتك. يمكنك صده بـ «الحارس 🛡️» أو اتهامه بالكذب!"
+      },
+      merchant: {
+        name: "التاجر",
+        sub: "يسحب +3 ذهب",
+        actionTitle: "لعب بطاقة [التاجر]!",
+        actionDesc: "يريد سحب 3 عملات ذهبية من البنك. لا يمكن صده بالحارس، لكن يمكنك اتهامه بالكذب إن شككت به!"
+      },
+      guardian: {
+        name: "الحارس",
+        sub: "درع يصد اللص والقاتل",
+        actionTitle: "رفع درع [الحارس] المضاد!",
+        actionDesc: "يدّعي امتلاك بطاقة الحارس لإبطال الهجوم تماماً!"
+      }
+    };
+
     const SVG_ART = {
       cardBack: `
         <svg viewBox="0 0 110 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="110" height="160" rx="14" fill="#080d18" stroke="#1e293b" stroke-width="2.5"/>
-          <rect x="5" y="5" width="100" height="150" rx="10" stroke="rgba(245, 179, 53, 0.2)" stroke-width="1.5" stroke-dasharray="3 3"/>
-          <path d="M10 10L100 150M100 10L10 150" stroke="#121b2f" stroke-width="1.8"/>
-          <circle cx="55" cy="80" r="26" fill="#0d1527" stroke="#f5b335" stroke-width="2"/>
-          <polygon points="55,62 69,80 55,98 41,80" fill="#f5b335" opacity="0.3"/>
+          <rect width="110" height="160" rx="14" fill="#080d18" stroke="#243452" stroke-width="2.5"/>
+          <rect x="6" y="6" width="98" height="148" rx="10" stroke="rgba(245, 179, 53, 0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle cx="55" cy="80" r="24" fill="#0d1527" stroke="#f5b335" stroke-width="2"/>
+          <polygon points="55,62 69,80 55,98 41,80" fill="#f5b335" opacity="0.35"/>
           <circle cx="55" cy="80" r="5" fill="#f5b335"/>
         </svg>
       `,
       assassin: `
         <svg viewBox="0 0 110 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="110" height="160" rx="14" fill="url(#bgAss)" stroke="#ef4444" stroke-width="2.5"/>
-          <rect x="5" y="5" width="100" height="150" rx="10" stroke="rgba(239, 68, 68, 0.4)" stroke-width="1.5"/>
-          <path d="M55 26L63 52H47L55 26Z" fill="#ef4444"/>
-          <path d="M55 52V108M44 74H66M51 108H59" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
-          <path d="M34 44C34 30 76 30 76 44C76 64 55 74 55 74C55 74 34 64 34 44Z" stroke="#f8fafc" stroke-width="1.8" fill="#1f1118"/>
-          <circle cx="47" cy="42" r="3" fill="#ef4444"/>
-          <circle cx="63" cy="42" r="3" fill="#ef4444"/>
-          <text x="55" y="138" font-family="'Tajawal', sans-serif" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">القاتل</text>
-          <defs>
-            <linearGradient id="bgAss" x1="0" y1="0" x2="110" y2="160">
-              <stop stop-color="#2d0d15"/><stop offset="1" stop-color="#090d16"/>
-            </linearGradient>
-          </defs>
+          <path d="M55 24L63 48H47L55 24Z" fill="#ef4444"/>
+          <path d="M55 48V100M44 70H66M51 100H59" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+          <path d="M34 42C34 28 76 28 76 42C76 62 55 72 55 72C55 72 34 62 34 42Z" stroke="#f8fafc" stroke-width="1.8" fill="#1f1118"/>
+          <circle cx="47" cy="40" r="3" fill="#ef4444"/><circle cx="63" cy="40" r="3" fill="#ef4444"/>
+          <text x="55" y="130" font-family="'Tajawal'" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">القاتل</text>
+          <text x="55" y="146" font-family="'Tajawal'" font-size="9.5" font-weight="700" fill="#fca5a5" text-anchor="middle">اغتيال بطاقة</text>
+          <defs><linearGradient id="bgAss" x1="0" y1="0" x2="110" y2="160"><stop stop-color="#330e17"/><stop offset="1" stop-color="#090d16"/></linearGradient></defs>
         </svg>
       `,
       thief: `
         <svg viewBox="0 0 110 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="110" height="160" rx="14" fill="url(#bgThief)" stroke="#38bdf8" stroke-width="2.5"/>
-          <rect x="5" y="5" width="100" height="150" rx="10" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5"/>
-          <path d="M41 52C41 40 69 40 69 52L75 92C75 104 35 104 35 92L41 52Z" fill="#0d243b" stroke="#38bdf8" stroke-width="2.5"/>
-          <path d="M46 50C46 50 55 54 64 50" stroke="#f5b335" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="55" cy="78" r="9" fill="#f5b335" opacity="0.3"/>
-          <text x="55" y="83" font-size="12" font-weight="900" fill="#f5b335" text-anchor="middle">$</text>
-          <text x="55" y="138" font-family="'Tajawal', sans-serif" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">اللص</text>
-          <defs>
-            <linearGradient id="bgThief" x1="0" y1="0" x2="110" y2="160">
-              <stop stop-color="#0a243c"/><stop offset="1" stop-color="#080e18"/>
-            </linearGradient>
-          </defs>
+          <path d="M41 48C41 36 69 36 69 48L75 88C75 100 35 100 35 88L41 48Z" fill="#0d243b" stroke="#38bdf8" stroke-width="2.5"/>
+          <circle cx="55" cy="74" r="10" fill="#f5b335" opacity="0.28"/>
+          <text x="55" y="79" font-size="13" font-weight="900" fill="#f5b335" text-anchor="middle">$</text>
+          <text x="55" y="130" font-family="'Tajawal'" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">اللص</text>
+          <text x="55" y="146" font-family="'Tajawal'" font-size="9.5" font-weight="700" fill="#7dd3fc" text-anchor="middle">سرقة 2 ذهب</text>
+          <defs><linearGradient id="bgThief" x1="0" y1="0" x2="110" y2="160"><stop stop-color="#0b2844"/><stop offset="1" stop-color="#080e18"/></linearGradient></defs>
         </svg>
       `,
       merchant: `
         <svg viewBox="0 0 110 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="110" height="160" rx="14" fill="url(#bgMerch)" stroke="#f5b335" stroke-width="2.5"/>
-          <rect x="5" y="5" width="100" height="150" rx="10" stroke="rgba(245, 179, 53, 0.4)" stroke-width="1.5"/>
-          <path d="M55 30V94M36 96H74" stroke="#f5b335" stroke-width="3" stroke-linecap="round"/>
-          <path d="M26 46H84M26 46L18 70H35L26 46ZM84 46L76 70H93L84 46Z" stroke="#f5b335" stroke-width="2" stroke-linejoin="round"/>
-          <circle cx="55" cy="30" r="4" fill="#f5b335"/>
-          <text x="55" y="138" font-family="'Tajawal', sans-serif" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">التاجر</text>
-          <defs>
-            <linearGradient id="bgMerch" x1="0" y1="0" x2="110" y2="160">
-              <stop stop-color="#31250d"/><stop offset="1" stop-color="#090e18"/>
-            </linearGradient>
-          </defs>
+          <path d="M55 28V90M36 92H74" stroke="#f5b335" stroke-width="3" stroke-linecap="round"/>
+          <path d="M26 44H84M26 44L18 68H35L26 44ZM84 44L76 68H93L84 44Z" stroke="#f5b335" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="55" cy="28" r="4" fill="#f5b335"/>
+          <text x="55" y="130" font-family="'Tajawal'" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">التاجر</text>
+          <text x="55" y="146" font-family="'Tajawal'" font-size="9.5" font-weight="700" fill="#fde047" text-anchor="middle">+3 ذهب من البنك</text>
+          <defs><linearGradient id="bgMerch" x1="0" y1="0" x2="110" y2="160"><stop stop-color="#36280d"/><stop offset="1" stop-color="#090e18"/></linearGradient></defs>
         </svg>
       `,
       guardian: `
         <svg viewBox="0 0 110 160" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="110" height="160" rx="14" fill="url(#bgGuard)" stroke="#10b981" stroke-width="2.5"/>
-          <rect x="5" y="5" width="100" height="150" rx="10" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.5"/>
-          <path d="M55 32L81 43V74C81 94 55 106 55 106C55 106 29 94 29 74V43L55 32Z" fill="#0d2e24" stroke="#10b981" stroke-width="2.8"/>
-          <path d="M55 46V92M40 64H70" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
-          <text x="55" y="138" font-family="'Tajawal', sans-serif" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">الحارس</text>
-          <defs>
-            <linearGradient id="bgGuard" x1="0" y1="0" x2="110" y2="160">
-              <stop stop-color="#0a2c20"/><stop offset="1" stop-color="#080e18"/>
-            </linearGradient>
-          </defs>
+          <path d="M55 28L81 39V69C81 89 55 101 55 101C55 101 29 89 29 69V39L55 28Z" fill="#0d2e24" stroke="#10b981" stroke-width="2.8"/>
+          <path d="M55 42V86M40 60H70" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="55" y="130" font-family="'Tajawal'" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">الحارس</text>
+          <text x="55" y="146" font-family="'Tajawal'" font-size="9.5" font-weight="700" fill="#6ee7b7" text-anchor="middle">صدّ اللص والقاتل</text>
+          <defs><linearGradient id="bgGuard" x1="0" y1="0" x2="110" y2="160"><stop stop-color="#093023"/><stop offset="1" stop-color="#080e18"/></linearGradient></defs>
         </svg>
       `
     };
 
     /* =========================================================================
-       3. الحسابات والليدربورد السحابي الحقيقي
+       3. نظام الحسابات والليدربورد السحابي
        ========================================================================= */
     const Auth = {
       user: null,
@@ -690,28 +939,23 @@
         const username = document.getElementById("authUsername").value.trim().toLowerCase();
         const pass = document.getElementById("authPasscode").value.trim();
 
-        if (!username || !pass) return triggerHudToast("يرجى ملء جميع الحقول المطلوبة!", true);
+        if (!username || !pass) return triggerHudToast("يرجى إدخال اسم المحارب ورمز المرور!", true);
 
         const userRef = rtdb.ref("users/" + username);
         const snap = await userRef.once("value");
 
         if (snap.exists()) {
           const data = snap.val();
-          if (data.passcode !== pass) return triggerHudToast("اسم المستخدم محجوز! الرمز غير صحيح.", true);
+          if (data.passcode !== pass) return triggerHudToast("هذا الاسم محجوز! رمز المرور غير صحيح.", true);
           this.user = data;
         } else {
-          this.user = { username, passcode: pass, elo: 1000, wins: 0, losses: 0, tier: "مبتدئ" };
+          this.user = { username, passcode: pass, elo: 1000, wins: 0, losses: 0, tier: "🛡️ مبتدئ برونزي" };
           await userRef.set(this.user);
         }
 
-        this.updateHeader();
+        this.updateUI();
         View.to("viewLobby");
         this.fetchLeaderboard();
-      },
-
-      updateHeader() {
-        document.getElementById("userNameBadge").innerText = this.user.username;
-        document.getElementById("userEloBadge").innerText = `${this.user.elo} ELO`;
       },
 
       getTier(elo) {
@@ -721,18 +965,32 @@
         return "🛡️ مبتدئ برونزي";
       },
 
+      updateUI() {
+        if (!this.user) return;
+        const tier = this.getTier(this.user.elo);
+        document.getElementById("userNameBadge").innerText = this.user.username;
+        document.getElementById("userEloBadge").innerText = `${this.user.elo} ELO`;
+        document.getElementById("lobbyName").innerText = this.user.username;
+        document.getElementById("lobbyAvatar").innerText = this.user.username.charAt(0).toUpperCase();
+        document.getElementById("lobbyTier").innerText = tier;
+        document.getElementById("statElo").innerText = this.user.elo;
+        document.getElementById("statWins").innerText = this.user.wins || 0;
+        document.getElementById("statLosses").innerText = this.user.losses || 0;
+      },
+
       async recordResult(won, isRanked) {
         if (!this.user || !isRanked) return;
         const delta = won ? 30 : -20;
         this.user.elo = Math.max(800, this.user.elo + delta);
-        if (won) this.user.wins++; else this.user.losses++;
+        if (won) this.user.wins = (this.user.wins || 0) + 1;
+        else this.user.losses = (this.user.losses || 0) + 1;
         this.user.tier = this.getTier(this.user.elo);
 
         await rtdb.ref("users/" + this.user.username).update({
           elo: this.user.elo, wins: this.user.wins, losses: this.user.losses, tier: this.user.tier
         });
 
-        this.updateHeader();
+        this.updateUI();
         this.fetchLeaderboard();
       },
 
@@ -743,20 +1001,29 @@
         snap.forEach(c => { ranks.push(c.val()); });
         ranks.reverse();
 
-        list.innerHTML = ranks.map((u, i) => `
-          <tr>
-            <td style="font-weight:900; color:${i===0?'var(--gold)':i===1?'#cbd5e1':'#cd7f32'}">#${i+1}</td>
-            <td style="font-weight:800; color:#fff;">${u.username}</td>
-            <td style="color:var(--gold); font-weight:900;">${u.elo}</td>
-            <td>${u.wins || 0}</td>
-            <td><span class="rank-shield">${u.tier || this.getTier(u.elo)}</span></td>
-          </tr>
-        `).join("");
+        list.innerHTML = ranks.map((u, i) => {
+          const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i+1}`;
+          return `
+            <div class="lb-item ${i === 0 ? 'top-1' : ''}">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="lb-rank">${medal}</span>
+                <div>
+                  <div style="font-weight:900; color:#fff;">${u.username}</div>
+                  <div style="font-size:0.75rem; color:var(--text-dim);">${u.wins || 0} انتصار</div>
+                </div>
+              </div>
+              <div style="text-align:left;">
+                <div style="color:var(--gold); font-weight:900; font-size:1rem;">${u.elo} ELO</div>
+                <div style="font-size:0.72rem; color:var(--text-dim);">${this.getTier(u.elo)}</div>
+              </div>
+            </div>
+          `;
+        }).join("");
       }
     };
 
     /* =========================================================================
-       4. البحث التنافسي الحقيقي (Matchmaking Radar)
+       4. البحث التنافسي والغرف الخاصة (Matchmaking)
        ========================================================================= */
     const CARD_ROLES = ["assassin", "thief", "merchant", "guardian"];
 
@@ -766,19 +1033,19 @@
       myQueueRef: null,
       matchListener: null,
 
+      deal() {
+        const id = CARD_ROLES[Math.floor(Math.random() * CARD_ROLES.length)];
+        return { id, dead: false };
+      },
+
       async startRankedSearch() {
-        if (!Auth.user) return triggerHudToast("يجب تسجيل الدخول أولاً!", true);
+        if (!Auth.user) return triggerHudToast("سجّل دخولك أولاً!", true);
         SFX.click();
 
-        const modal = document.getElementById("radarModal");
-        modal.style.display = "flex";
+        document.getElementById("radarModal").style.display = "flex";
         this.seconds = 0;
         this.updateClock();
-
-        this.timerInterval = setInterval(() => {
-          this.seconds++;
-          this.updateClock();
-        }, 1000);
+        this.timerInterval = setInterval(() => { this.seconds++; this.updateClock(); }, 1000);
 
         const queueRef = rtdb.ref("ranked_queue");
         const snapshot = await queueRef.once("value");
@@ -795,21 +1062,17 @@
 
         if (opponent) {
           await rtdb.ref("ranked_queue/" + opponent.key).remove();
-          
           const roomId = "match_" + Date.now();
-          const p1Cards = [this.deal(), this.deal()];
-          const p2Cards = [this.deal(), this.deal()];
-
           const roomData = {
             id: roomId,
             isRanked: true,
-            p1: { name: opponent.username, elo: opponent.elo, coins: 2, cards: p1Cards },
-            p2: { name: Auth.user.username, elo: Auth.user.elo, coins: 2, cards: p2Cards },
+            p1: { name: opponent.username, elo: opponent.elo, coins: 2, cards: [this.deal(), this.deal()] },
+            p2: { name: Auth.user.username, elo: Auth.user.elo, coins: 2, cards: [this.deal(), this.deal()] },
             turn: opponent.username,
             state: "ACTION",
             pendingClaim: null,
-            timerEnd: Date.now() + 15000,
-            logs: ["بدأت المعركة بين اللاعبين الحقيقيين!"]
+            timerEnd: Date.now() + 16000,
+            logs: ["⚔️ انطلقت مواجهة الرانكد! راقب وسط الطاولة."]
           };
 
           await rtdb.ref("rooms/" + roomId).set(roomData);
@@ -824,7 +1087,6 @@
             elo: Auth.user.elo,
             time: Date.now()
           });
-
           this.myQueueRef.onDisconnect().remove();
 
           const userMatchRef = rtdb.ref("users/" + Auth.user.username + "/active_match");
@@ -840,11 +1102,6 @@
         }
       },
 
-      deal() {
-        const id = CARD_ROLES[Math.floor(Math.random() * CARD_ROLES.length)];
-        return { id, dead: false };
-      },
-
       updateClock() {
         const m = String(Math.floor(this.seconds / 60)).padStart(2, '0');
         const s = String(this.seconds % 60).padStart(2, '0');
@@ -854,79 +1111,69 @@
       cancelSearch(foundMatch = false) {
         clearInterval(this.timerInterval);
         document.getElementById("radarModal").style.display = "none";
-
-        if (this.myQueueRef) {
-          this.myQueueRef.remove();
-          this.myQueueRef = null;
-        }
-        if (this.matchListener) {
-          this.matchListener.off();
-          this.matchListener = null;
-        }
-
-        if (!foundMatch) triggerHudToast("تم إلغاء البحث بنجاح");
+        if (this.myQueueRef) { this.myQueueRef.remove(); this.myQueueRef = null; }
+        if (this.matchListener) { this.matchListener.off(); this.matchListener = null; }
+        if (!foundMatch) triggerHudToast("تم إلغاء البحث");
       },
 
       async joinPrivateRoom() {
         const code = document.getElementById("customRoomCode").value.trim();
-        if (!code) return triggerHudToast("يرجى كتابة رمز الغرفة!", true);
+        if (!code) return triggerHudToast("اكتب كود الغرفة أولاً!", true);
         SFX.click();
 
         const roomRef = rtdb.ref("private_rooms/" + code);
         const snap = await roomRef.once("value");
 
         if (!snap.exists()) {
-          const p1Cards = [this.deal(), this.deal()];
           await roomRef.set({
             id: code,
             isRanked: false,
-            p1: { name: Auth.user.username, elo: Auth.user.elo, coins: 2, cards: p1Cards },
+            p1: { name: Auth.user.username, elo: Auth.user.elo, coins: 2, cards: [this.deal(), this.deal()] },
             p2: null,
             status: "waiting"
           });
 
-          triggerHudToast("تم إنشاء الغرفة! بانتظار صديقك...");
+          triggerHudToast("تم إنشاء الغرفة (" + code + ")! بانتظار دخول صديقك...");
           roomRef.on("value", s => {
             if (s.exists() && s.val().status === "playing") {
               roomRef.off();
-              document.getElementById("customRoomBox").style.display = 'none';
               Game.joinOnlineRoom("private_rooms/" + code, "p1");
             }
           });
         } else {
           const data = snap.val();
-          if (data.status === "playing") return triggerHudToast("الغرفة ممتلئة!", true);
-
-          const p2Cards = [this.deal(), this.deal()];
+          if (data.status === "playing" && data.p1.name !== Auth.user.username) {
+            return triggerHudToast("هذه الغرفة ممتلئة حالياً!", true);
+          }
           await roomRef.update({
-            p2: { name: Auth.user.username, elo: Auth.user.elo, coins: 2, cards: p2Cards },
+            p2: { name: Auth.user.username, elo: Auth.user.elo, coins: 2, cards: [this.deal(), this.deal()] },
             turn: data.p1.name,
             state: "ACTION",
             status: "playing",
-            timerEnd: Date.now() + 15000,
-            logs: ["انضم الصديق وبدأت المباراة!"]
+            timerEnd: Date.now() + 16000,
+            logs: ["👥 دخل الصديق الغرفة وبدأت المواجهة!"]
           });
-
-          document.getElementById("customRoomBox").style.display = 'none';
           Game.joinOnlineRoom("private_rooms/" + code, "p2");
         }
       }
     };
 
     /* =========================================================================
-       5. محرك ومزامنة المعركة السحابية (Multiplayer Sync Engine)
+       5. محرك اللعبة الموحد (يدعم الأونلاين + البوت + الحارس + منصة وسط الطاولة)
        ========================================================================= */
     const Game = {
       roomPath: null,
-      myRole: null,
+      myRole: "p1",
       isOnline: false,
       roomRef: null,
       localState: null,
       timerAnim: null,
+      matchEnded: false,
 
       joinOnlineRoom(pathOrId, role) {
         this.isOnline = true;
         this.myRole = role;
+        this.matchEnded = false;
         this.roomPath = pathOrId.startsWith("private_rooms/") ? pathOrId : ("rooms/" + pathOrId);
         this.roomRef = rtdb.ref(this.roomPath);
 
@@ -935,97 +1182,191 @@
         this.roomRef.on("value", snapshot => {
           if (!snapshot.exists()) return;
           this.localState = snapshot.val();
-          this.renderOnline();
+          this.renderTable();
         });
 
-        // الاستماع للتعبيرات السريعة اللحظية
         rtdb.ref(this.roomPath + "/last_emote").on("value", s => {
-          if (s.exists() && s.val()) {
+          if (s.exists() && s.val() && this.localState) {
             const em = s.val();
-            this.showEmoteBubble(em.by === (this.myRole === 'p1' ? this.localState.p1.name : this.localState.p2.name) ? 'my' : 'opp', em.text);
+            const myName = (this.myRole === 'p1') ? this.localState.p1.name : this.localState.p2.name;
+            this.showEmoteBubble(em.by === myName ? 'my' : 'opp', em.text);
           }
         });
       },
 
-      renderOnline() {
+      startPracticeBot() {
+        SFX.click();
+        this.isOnline = false;
+        this.myRole = "p1";
+        this.matchEnded = false;
+        if (this.roomRef) { this.roomRef.off(); this.roomRef = null; }
+
+        const myName = Auth.user ? Auth.user.username : "أنت";
+        this.localState = {
+          p1: { name: myName, elo: Auth.user ? Auth.user.elo : 1000, coins: 2, cards: [Matchmaking.deal(), Matchmaking.deal()] },
+          p2: { name: "البوت التكتيكي 🤖", elo: 1150, coins: 2, cards: [Matchmaking.deal(), Matchmaking.deal()] },
+          turn: myName,
+          state: "ACTION",
+          pendingClaim: null,
+          isRanked: false,
+          timerEnd: Date.now() + 16000,
+          logs: ["🎯 بدأت مباراة التدريب! جرب لعب البطاقات أو الخداع."]
+        };
+        View.to("viewGame");
+        this.renderTable();
+      },
+
+      async syncState(updates) {
+        Object.assign(this.localState, updates);
+        if (this.isOnline && this.roomRef) {
+          await this.roomRef.update(updates);
+        } else {
+          this.renderTable();
+          this.triggerBotBrain();
+        }
+      },
+
+      renderTable() {
         const data = this.localState;
+        if (!data || !data.p2) return;
+
         const myData = (this.myRole === "p1") ? data.p1 : data.p2;
         const oppData = (this.myRole === "p1") ? data.p2 : data.p1;
 
-        if (!oppData) return;
-
         document.getElementById("myNameDisplay").innerText = myData.name;
-        document.getElementById("mySubDisplay").innerText = `${myData.elo} ELO`;
         document.getElementById("oppNameDisplay").innerText = oppData.name;
-        document.getElementById("oppSubDisplay").innerText = `${oppData.elo} ELO (لاعب حقيقي)`;
+        document.getElementById("oppSubDisplay").innerText = this.isOnline ? `${oppData.elo} ELO (لاعب حقيقي)` : `ذكاء اصطناعي تدريبي`;
+        document.getElementById("matchModeTag").innerText = data.isRanked ? "🔥 مباراة رانكد رسمية" : (this.isOnline ? "👥 غرفة خاصة" : "🤖 تدريب فردي");
 
         document.getElementById("myCoinsCount").innerText = myData.coins;
         document.getElementById("oppCoinsCount").innerText = oppData.coins;
 
-        // بطاقات اللاعب
+        // رسم بطاقاتي
         document.getElementById("myCardsDeck").innerHTML = myData.cards.map(c => `
-          <div class="card-frame ${c.dead ? 'dead' : ''}">${SVG_ART[c.id]}</div>
+          <div class="card-frame ${c.dead ? 'dead' : ''}">
+            ${SVG_ART[c.id]}
+            ${c.dead ? '<div class="dead-stamp">مُدمّرة 💀</div>' : ''}
+          </div>
         `).join("");
 
-        // بطاقات الخصم
+        // رسم بطاقات الخصم
         document.getElementById("oppCardsDeck").innerHTML = oppData.cards.map(c => `
-          <div class="card-frame ${c.dead ? 'dead' : ''}">${c.dead ? SVG_ART[c.id] : SVG_ART.cardBack}</div>
+          <div class="card-frame ${c.dead ? 'dead' : ''}">
+            ${c.dead ? SVG_ART[c.id] : SVG_ART.cardBack}
+            ${c.dead ? '<div class="dead-stamp">مُدمّرة 💀</div>' : ''}
+          </div>
         `).join("");
 
-        if (data.logs) {
-          document.getElementById("battleLogStream").innerHTML = data.logs.slice().reverse().map(l => `<p>${l}</p>`).join("");
+        // آخر سجل
+        if (data.logs && data.logs.length > 0) {
+          document.getElementById("lastLogLine").innerText = data.logs[data.logs.length - 1];
         }
 
         const isMyTurn = (data.turn === myData.name);
         document.getElementById("zoneMe").classList.toggle("turn-active", isMyTurn);
         document.getElementById("zoneOpp").classList.toggle("turn-active", !isMyTurn);
-        document.getElementById("turnNoticeHeader").innerText = isMyTurn ? "دورك الآن: حدد ادعاءك أو حركتك الحتمية" : `دور الخصم [${oppData.name}] يفكر...`;
 
         const commandGrid = document.getElementById("commandGrid");
-        commandGrid.style.pointerEvents = (isMyTurn && data.state === "ACTION") ? "auto" : "none";
-        commandGrid.style.opacity = (isMyTurn && data.state === "ACTION") ? "1" : "0.45";
+        const canActNow = (isMyTurn && data.state === "ACTION" && !this.matchEnded);
+        commandGrid.style.pointerEvents = canActNow ? "auto" : "none";
+        commandGrid.style.opacity = canActNow ? "1" : "0.4";
 
-        // شريط رد الفعل والتشكيك
-        const reactHud = document.getElementById("reactionHud");
-        if (data.state === "WAITING_REACTION" && data.pendingClaim && data.pendingClaim.by !== myData.name) {
-          reactHud.style.display = "flex";
-          document.getElementById("reactionTextNotice").innerText = `الخصم [${oppData.name}] يدعي امتلاك [${this.cardName(data.pendingClaim.role)}]!`;
-          document.getElementById("btnBlockOption").style.display = (data.pendingClaim.role === "thief" || data.pendingClaim.role === "assassin") ? "inline-block" : "none";
-        } else {
-          reactHud.style.display = "none";
+        document.getElementById("turnNoticeHeader").innerText = canActNow
+          ? "⚡ دورك الآن: اختر بطاقة من الأسفل لتلعبها في وسط الطاولة"
+          : (data.state !== "ACTION" ? "👀 انتبه لمنصة وسط الطاولة للرد على البطاقة الملعوبة!" : `⏳ دور الخصم [${oppData.name}] يختار حركته...`);
+
+        // رسم منصة وسط الطاولة التفاعلية (Center Stage)
+        this.renderCenterStage(data, myData, oppData);
+
+        this.runTimerBar(data.timerEnd || (Date.now() + 15000));
+        this.checkWinCondition(myData, oppData, data.isRanked);
+      },
+
+      renderCenterStage(data, myData, oppData) {
+        const container = document.getElementById("stageDynamicContent");
+        const claim = data.pendingClaim;
+
+        // الحالة 1: انتظار اختيار حركة عادية
+        if (data.state === "ACTION" || !claim) {
+          const isMyTurn = (data.turn === myData.name);
+          container.innerHTML = `
+            <div class="stage-idle">
+              <div class="stage-idle-badge">${isMyTurn ? '🎯 دورك الآن للعب' : `⏳ بانتظار حركة ${oppData.name}`}</div>
+              <p style="color:var(--text-dim); font-size:0.9rem; max-width:460px;">
+                أي بطاقة يلعبها أحدكما ستظهر هنا في منتصف الطاولة ليقرأها الطرف الآخر ويقرر تصديقها، صدها بالحارس، أو كشف كذبها!
+              </p>
+            </div>
+          `;
+          return;
         }
 
-        // تشغيل شريط الوقت
-        this.runTimerBar(data.timerEnd || (Date.now() + 15000));
-        this.checkOnlineWin(myData, oppData, data.isRanked);
-      },
+        // الحالة 2: لاعب رمى بطاقة (التاجر، اللص، القاتل) في وسط الطاولة
+        if (data.state === "WAITING_REACTION") {
+          const meta = ROLE_META[claim.role];
+          const iAmTarget = (claim.by !== myData.name);
+          const canBlockWithGuardian = (claim.role === "thief" || claim.role === "assassin");
 
-      runTimerBar(endTime) {
-        clearInterval(this.timerAnim);
-        const bar = document.getElementById("turnTimerBar");
-        const totalDuration = 15000;
+          container.innerHTML = `
+            <div class="stage-showcase">
+              <div class="played-card-visual">
+                <div class="claim-tag-float">البطاقة الملعوبة</div>
+                ${SVG_ART[claim.role]}
+              </div>
+              <div class="stage-details">
+                <span class="stage-actor-pill">🃏 ${claim.by} رمى هذه البطاقة على الطاولة</span>
+                <div class="stage-headline">${meta.actionTitle}</div>
+                <div class="stage-effect-desc">${meta.actionDesc}</div>
+                ${iAmTarget ? `
+                  <div class="stage-reaction-btns">
+                    <button class="btn-outline" onclick="Game.submitReaction('pass')">✅ تمرير وقبول الحركة</button>
+                    ${canBlockWithGuardian ? `<button class="btn-emerald" onclick="Game.submitReaction('block')">🛡️ صدّ الهجوم بالحارس!</button>` : ''}
+                    <button class="btn-danger" onclick="Game.submitReaction('challenge')">🚨 كاذب! ما معك [${meta.name}]</button>
+                  </div>
+                ` : `
+                  <div style="color:var(--gold); font-weight:800; font-size:0.92rem;">⏳ بانتظار رد فعل [${oppData.name}] على بطاقتك...</div>
+                `}
+              </div>
+            </div>
+          `;
+          return;
+        }
 
-        this.timerAnim = setInterval(() => {
-          const remaining = Math.max(0, endTime - Date.now());
-          const percent = (remaining / totalDuration) * 100;
-          bar.style.width = percent + "%";
-          if (remaining <= 0) clearInterval(this.timerAnim);
-        }, 150);
-      },
+        // الحالة 3: المدافع رفع درع الحارس لصد الهجوم! الآن المهاجم يقرر تصديق الحارس أو تكذيبه
+        if (data.state === "WAITING_BLOCK_RESPONSE") {
+          const iAmOriginalAttacker = (claim.by === myData.name);
+          const origMeta = ROLE_META[claim.role];
 
-      async sendEmote(text) {
-        if (!this.roomRef) return;
-        const myName = (this.myRole === 'p1') ? this.localState.p1.name : this.localState.p2.name;
-        await this.roomRef.child("last_emote").set({ by: myName, text, time: Date.now() });
-      },
-
-      showEmoteBubble(target, text) {
-        const cont = document.getElementById(target === 'my' ? "myEmoteContainer" : "oppEmoteContainer");
-        cont.innerHTML = `<div class="emote-bubble">${text}</div>`;
+          container.innerHTML = `
+            <div class="stage-showcase">
+              <div class="played-card-visual shield-mode">
+                <div class="claim-tag-float" style="color:#34d399; border-color:#10b981;">درع مضاد!</div>
+                ${SVG_ART.guardian}
+              </div>
+              <div class="stage-details">
+                <span class="stage-actor-pill" style="background:rgba(16,185,129,0.2); border-color:#10b981; color:#6ee7b7;">
+                  🛡️ ${claim.blockedBy} رفع بطاقة [الحارس] لصد ${origMeta.name}!
+                </span>
+                <div class="stage-headline">تم اعتراض الهجوم بدرع الحارس!</div>
+                <div class="stage-effect-desc">
+                  يزعم <b>${claim.blockedBy}</b> أنه يملك بطاقة الحارس لإبطال حركة [${origMeta.name}].
+                  ${iAmOriginalAttacker ? 'هل تصدق أن معه حارس وتتراجع؟ أم تتهمه بالكذب؟' : 'بانتظار قرار المهاجم...'}
+                </div>
+                ${iAmOriginalAttacker ? `
+                  <div class="stage-reaction-btns">
+                    <button class="btn-outline" onclick="Game.submitBlockDecision('accept_block')">🏳️ تراجع (تصديق الحارس)</button>
+                    <button class="btn-danger" onclick="Game.submitBlockDecision('challenge_block')">🚨 كاذب! ما معك [الحارس]</button>
+                  </div>
+                ` : `
+                  <div style="color:#34d399; font-weight:800; font-size:0.92rem;">⏳ بانتظار قرار المهاجم [${claim.by}] حول درع الحارس...</div>
+                `}
+              </div>
+            </div>
+          `;
+        }
       },
 
       async dispatch(action) {
-        SFX.click();
+        SFX.cardPlay();
         const data = this.localState;
         const myData = (this.myRole === "p1") ? data.p1 : data.p2;
         const oppKey = (this.myRole === "p1") ? "p2" : "p1";
@@ -1034,47 +1375,48 @@
         if (action === "income") {
           SFX.coin();
           myData.coins += 1;
-          const log = `${myData.name} أخذ دخل عادي (+1 ذهب).`;
-          await this.roomRef.update({
+          await this.syncState({
             [this.myRole]: myData,
             turn: oppData.name,
             state: "ACTION",
-            timerEnd: Date.now() + 15000,
-            logs: [...(data.logs || []), log]
+            pendingClaim: null,
+            timerEnd: Date.now() + 16000,
+            logs: [...(data.logs || []), `💵 ${myData.name} سحب دخلاً عادياً (+1 ذهب).`]
           });
         } else if (action === "strike") {
-          if (myData.coins < 7) return triggerHudToast("تحتاج إلى 7 عملات للضربة القاضية!", true);
+          if (myData.coins < 7) return triggerHudToast("الضربة القاضية تتطلب 7 عملات ذهبية!", true);
           SFX.slash();
           myData.coins -= 7;
           this.killFirstAlive(oppData);
-          const log = `💥 ${myData.name} سدد ضربة قاضية حتمية ودمر بطاقة لـ ${oppData.name}!`;
-          await this.roomRef.update({
+          await this.syncState({
             [this.myRole]: myData,
             [oppKey]: oppData,
             turn: oppData.name,
             state: "ACTION",
-            timerEnd: Date.now() + 15000,
-            logs: [...(data.logs || []), log]
+            pendingClaim: null,
+            timerEnd: Date.now() + 16000,
+            logs: [...(data.logs || []), `💥 ${myData.name} سدد ضربة قاضية حتمية ودمر بطاقة لـ ${oppData.name}!`]
           });
         } else if (action === "merchant") {
-          await this.declareOnlineClaim("merchant", `${myData.name} يدعي دور [التاجر] ليأخذ 3 عملات.`);
+          await this.declareClaim("merchant", `⚖️ ${myData.name} رمى بطاقة [التاجر] في وسط الطاولة (+3 ذهب).`);
         } else if (action === "thief") {
-          if (oppData.coins === 0) return triggerHudToast("الخصم لا يملك أي عملات لسرقتها!", true);
-          await this.declareOnlineClaim("thief", `${myData.name} يدعي دور [اللص] لسرقة 2 عملات.`);
+          if (oppData.coins === 0) return triggerHudToast("الخصم لا يملك عملات لسرقتها!", true);
+          await this.declareClaim("thief", `🗡️ ${myData.name} رمى بطاقة [اللص] لسرقة عملتين من ${oppData.name}!`);
         } else if (action === "assassin") {
-          if (myData.coins < 3) return triggerHudToast("تحتاج إلى 3 عملات لتنفيذ الاغتيال!", true);
-          await this.declareOnlineClaim("assassin", `${myData.name} يدعي دور [القاتل] لتدمير بطاقة.`);
+          if (myData.coins < 3) return triggerHudToast("تحتاج إلى 3 عملات للعب القاتل!", true);
+          myData.coins -= 3; // تُدفع عملات القاتل عند إعلان الهجوم
+          await this.syncState({ [this.myRole]: myData });
+          await this.declareClaim("assassin", `☠️ ${myData.name} دفع 3 عملات ورمى بطاقة [القاتل] لاغتيال بطاقة ${oppData.name}!`);
         }
       },
 
-      async declareOnlineClaim(role, logMsg) {
+      async declareClaim(role, logMsg) {
         const data = this.localState;
         const myData = (this.myRole === "p1") ? data.p1 : data.p2;
-
-        await this.roomRef.update({
+        await this.syncState({
           state: "WAITING_REACTION",
-          pendingClaim: { by: myData.name, role },
-          timerEnd: Date.now() + 8000,
+          pendingClaim: { by: myData.name, role, byRoleKey: this.myRole },
+          timerEnd: Date.now() + 12000,
           logs: [...(data.logs || []), logMsg]
         });
       },
@@ -1089,46 +1431,95 @@
 
         if (type === "pass") {
           this.applyClaimEffect(claim, oppData, myData);
-          await this.roomRef.update({
+          await this.syncState({
             [oppKey]: oppData,
             [this.myRole]: myData,
             state: "ACTION",
             turn: myData.name,
             pendingClaim: null,
-            timerEnd: Date.now() + 15000,
-            logs: [...(data.logs || []), `${myData.name} تقبل حركة الخصم.`]
+            timerEnd: Date.now() + 16000,
+            logs: [...(data.logs || []), `✅ ${myData.name} مرّر الحركة ونُفذت بطاقة [${ROLE_META[claim.role].name}].`]
+          });
+        } else if (type === "block") {
+          SFX.shield();
+          await this.syncState({
+            state: "WAITING_BLOCK_RESPONSE",
+            pendingClaim: { ...claim, blockedBy: myData.name, blockerKey: this.myRole },
+            timerEnd: Date.now() + 12000,
+            logs: [...(data.logs || []), `🛡️ ${myData.name} رفع درع [الحارس] لصد هجوم ${oppData.name}!`]
           });
         } else if (type === "challenge") {
-          const honest = oppData.cards.some(c => !c.dead && c.id === claim.role);
+          const cardIdx = oppData.cards.findIndex(c => !c.dead && c.id === claim.role);
           let log = "";
 
-          if (honest) {
+          if (cardIdx !== -1) {
             SFX.slash();
+            // الخصم كان صادقاً! نبدل بطاقته المكشوفة ببطاقة جديدة من السطح وأخسر أنا بطاقة
+            oppData.cards[cardIdx] = Matchmaking.deal();
             this.killFirstAlive(myData);
             this.applyClaimEffect(claim, oppData, myData);
-            log = `✅ الخصم ${oppData.name} كان صادقاً ويملك [${this.cardName(claim.role)}]! خسر ${myData.name} بطاقة لاتهامه الباطل.`;
+            log = `✅ ${oppData.name} كان صادقاً ويملك [${ROLE_META[claim.role].name}]! خسر ${myData.name} بطاقة لاتهامه الخاطئ.`;
           } else {
             SFX.error();
             this.killFirstAlive(oppData);
-            log = `🚨 كُشف الخداع! ${oppData.name} كذب ولا يملك [${this.cardName(claim.role)}] وخسر بطاقة!`;
+            log = `🚨 كُشف الكذب! ${oppData.name} لم يكن يملك [${ROLE_META[claim.role].name}] وخسر بطاقة عقاباً له!`;
           }
 
-          await this.roomRef.update({
+          await this.syncState({
             [oppKey]: oppData,
             [this.myRole]: myData,
             state: "ACTION",
             turn: myData.name,
             pendingClaim: null,
-            timerEnd: Date.now() + 15000,
+            timerEnd: Date.now() + 16000,
             logs: [...(data.logs || []), log]
           });
-        } else if (type === "block") {
-          await this.roomRef.update({
+        }
+      },
+
+      async submitBlockDecision(decision) {
+        SFX.click();
+        const data = this.localState;
+        const myData = (this.myRole === "p1") ? data.p1 : data.p2; // المهاجم الأصلي
+        const oppKey = (this.myRole === "p1") ? "p2" : "p1";
+        const oppData = data[oppKey]; // المدافع بالحارس
+        const claim = data.pendingClaim;
+
+        if (decision === "accept_block") {
+          SFX.shield();
+          await this.syncState({
             state: "ACTION",
-            turn: myData.name,
+            turn: oppData.name,
             pendingClaim: null,
-            timerEnd: Date.now() + 15000,
-            logs: [...(data.logs || []), `🛡️ ${myData.name} أعلن امتلاك الحارس وتصدى للهجوم!`]
+            timerEnd: Date.now() + 16000,
+            logs: [...(data.logs || []), `🛡️ نجح صدّ [الحارس]! تراجع ${myData.name} وأُبطل الهجوم.`]
+          });
+        } else if (decision === "challenge_block") {
+          const guardIdx = oppData.cards.findIndex(c => !c.dead && c.id === "guardian");
+          let log = "";
+
+          if (guardIdx !== -1) {
+            SFX.slash();
+            // المدافع يملك الحارس فعلاً! المهاجم يخسر بطاقة ويفشل هجومه
+            oppData.cards[guardIdx] = Matchmaking.deal();
+            this.killFirstAlive(myData);
+            log = `🛡️ ${oppData.name} كان يملك [الحارس] فعلاً! صدّ الهجوم وخسر ${myData.name} بطاقة لاتهامه الخاطئ!`;
+          } else {
+            SFX.error();
+            // المدافع كذب بشأن الحارس! يخسر بطاقة للكذب + ينفذ الهجوم الأصلي عليه
+            this.killFirstAlive(oppData);
+            this.applyClaimEffect(claim, myData, oppData);
+            log = `🚨 كذبة حارس مكشوفة! ${oppData.name} لا يملك الحارس فخسر بطاقة ونُفذ الهجوم عليه!`;
+          }
+
+          await this.syncState({
+            [this.myRole]: myData,
+            [oppKey]: oppData,
+            state: "ACTION",
+            turn: oppData.name,
+            pendingClaim: null,
+            timerEnd: Date.now() + 16000,
+            logs: [...(data.logs || []), log]
           });
         }
       },
@@ -1136,15 +1527,15 @@
       applyClaimEffect(claim, actor, victim) {
         if (claim.role === "merchant") {
           actor.coins += 3;
+          SFX.coin();
         } else if (claim.role === "thief") {
           const loot = Math.min(2, victim.coins);
           victim.coins -= loot;
           actor.coins += loot;
+          SFX.coin();
         } else if (claim.role === "assassin") {
-          if (actor.coins >= 3) {
-            actor.coins -= 3;
-            this.killFirstAlive(victim);
-          }
+          SFX.slash();
+          this.killFirstAlive(victim);
         }
       },
 
@@ -1153,67 +1544,225 @@
         if (c) c.dead = true;
       },
 
-      checkOnlineWin(myData, oppData, isRanked) {
+      /* ذكاء البوت التدريبي */
+      triggerBotBrain() {
+        if (this.isOnline || this.matchEnded) return;
+        const data = this.localState;
+        const bot = data.p2;
+        const human = data.p1;
+
+        // 1. إذا لعب الإنسان بطاقة وينتظر البوت الرد عليها
+        if (data.state === "WAITING_REACTION" && data.pendingClaim && data.pendingClaim.by === human.name) {
+          setTimeout(() => {
+            if (this.matchEnded) return;
+            const role = data.pendingClaim.role;
+            const botHasGuard = bot.cards.some(c => !c.dead && c.id === "guardian");
+            const roll = Math.random();
+
+            if ((role === "thief" || role === "assassin") && (botHasGuard || roll < 0.35)) {
+              // البوت يصد بالحارس (حقيقة أو خداع)
+              this.botSimulateBlock();
+            } else if (roll < 0.28) {
+              // البوت يتهمك بالكذب
+              this.botSimulateChallenge();
+            } else {
+              // البوت يمرر الحركة
+              this.botSimulatePass();
+            }
+          }, 1600);
+          return;
+        }
+
+        // 2. إذا رفع الإنسان درع الحارس وينتظر قرار البوت المهاجم
+        if (data.state === "WAITING_BLOCK_RESPONSE" && data.pendingClaim && data.pendingClaim.by === bot.name) {
+          setTimeout(() => {
+            if (this.matchEnded) return;
+            if (Math.random() < 0.35) {
+              // البوت يشكك في حارسك!
+              const guardIdx = human.cards.findIndex(c => !c.dead && c.id === "guardian");
+              let log = "";
+              if (guardIdx !== -1) {
+                SFX.slash();
+                human.cards[guardIdx] = Matchmaking.deal();
+                this.killFirstAlive(bot);
+                log = `🛡️ البوت شكك في حارسك لكنك كنت صادقاً! خسر البوت بطاقة.`;
+              } else {
+                SFX.error();
+                this.killFirstAlive(human);
+                this.applyClaimEffect(data.pendingClaim, bot, human);
+                log = `🚨 البوت كشف كذبتك بخصوص [الحارس]! خسرت بطاقة ونُفذ هجومه.`;
+              }
+              this.syncState({
+                p1: human, p2: bot, state: "ACTION", turn: human.name, pendingClaim: null,
+                timerEnd: Date.now() + 16000, logs: [...data.logs, log]
+              });
+            } else {
+              SFX.shield();
+              this.syncState({
+                state: "ACTION", turn: human.name, pendingClaim: null,
+                timerEnd: Date.now() + 16000, logs: [...data.logs, `🛡️ البوت صدّق درع الحارس الخاص بك وتراجع!`]
+              });
+            }
+          }, 1600);
+          return;
+        }
+
+        // 3. دور البوت للهجوم
+        if (data.state === "ACTION" && data.turn === bot.name) {
+          setTimeout(() => {
+            if (this.matchEnded) return;
+            if (bot.coins >= 7) {
+              SFX.slash();
+              bot.coins -= 7;
+              this.killFirstAlive(human);
+              this.syncState({
+                p1: human, p2: bot, turn: human.name, state: "ACTION",
+                timerEnd: Date.now() + 16000, logs: [...data.logs, `💥 البوت سدد ضربة قاضية حتمية ودمر بطاقتك!`]
+              });
+              return;
+            }
+
+            const options = ["merchant", "thief", "income"];
+            if (bot.coins >= 3) options.push("assassin");
+            const pick = options[Math.floor(Math.random() * options.length)];
+
+            if (pick === "income" || (pick === "thief" && human.coins === 0)) {
+              SFX.coin();
+              bot.coins += 1;
+              this.syncState({
+                p2: bot, turn: human.name, state: "ACTION",
+                timerEnd: Date.now() + 16000, logs: [...data.logs, `💵 البوت سحب دخلاً عادياً (+1 ذهب).`]
+              });
+            } else {
+              SFX.cardPlay();
+              if (pick === "assassin") bot.coins -= 3;
+              this.syncState({
+                p2: bot,
+                state: "WAITING_REACTION",
+                pendingClaim: { by: bot.name, role: pick, byRoleKey: "p2" },
+                timerEnd: Date.now() + 12000,
+                logs: [...data.logs, `🃏 ${bot.name} لعب بطاقة [${ROLE_META[pick].name}] في وسط الطاولة!`]
+              });
+            }
+          }, 1400);
+        }
+      },
+
+      botSimulatePass() {
+        const data = this.localState;
+        const human = data.p1; const bot = data.p2;
+        this.applyClaimEffect(data.pendingClaim, human, bot);
+        this.syncState({
+          p1: human, p2: bot, state: "ACTION", turn: bot.name, pendingClaim: null,
+          timerEnd: Date.now() + 16000, logs: [...data.logs, `✅ البوت مرر حركتك ونُفذت البطاقة.`]
+        });
+      },
+
+      botSimulateBlock() {
+        SFX.shield();
+        const data = this.localState;
+        const bot = data.p2;
+        this.syncState({
+          state: "WAITING_BLOCK_RESPONSE",
+          pendingClaim: { ...data.pendingClaim, blockedBy: bot.name, blockerKey: "p2" },
+          timerEnd: Date.now() + 12000,
+          logs: [...data.logs, `🛡️ البوت رفع درع [الحارس] لصد هجومك!`]
+        });
+      },
+
+      botSimulateChallenge() {
+        const data = this.localState;
+        const human = data.p1; const bot = data.p2;
+        const claim = data.pendingClaim;
+        const idx = human.cards.findIndex(c => !c.dead && c.id === claim.role);
+        let log = "";
+
+        if (idx !== -1) {
+          SFX.slash();
+          human.cards[idx] = Matchmaking.deal();
+          this.killFirstAlive(bot);
+          this.applyClaimEffect(claim, human, bot);
+          log = `✅ البوت اتهمك بالكذب لكنك تملك [${ROLE_META[claim.role].name}]! خسر البوت بطاقة.`;
+        } else {
+          SFX.error();
+          this.killFirstAlive(human);
+          log = `🚨 البوت كشف كذبتك! أنت لا تملك [${ROLE_META[claim.role].name}] فخسرت بطاقة.`;
+        }
+
+        this.syncState({
+          p1: human, p2: bot, state: "ACTION", turn: bot.name, pendingClaim: null,
+          timerEnd: Date.now() + 16000, logs: [...data.logs, log]
+        });
+      },
+
+      runTimerBar(endTime) {
+        clearInterval(this.timerAnim);
+        const bar = document.getElementById("turnTimerBar");
+        const total = 15000;
+        this.timerAnim = setInterval(() => {
+          const rem = Math.max(0, endTime - Date.now());
+          bar.style.width = ((rem / total) * 100) + "%";
+          if (rem <= 0) clearInterval(this.timerAnim);
+        }, 150);
+      },
+
+      checkWinCondition(myData, oppData, isRanked) {
+        if (this.matchEnded) return;
         const myAlive = myData.cards.filter(c => !c.dead).length;
         const oppAlive = oppData.cards.filter(c => !c.dead).length;
 
-        if (myAlive === 0) {
-          SFX.slash();
+        if (myAlive === 0 || oppAlive === 0) {
+          this.matchEnded = true;
           clearInterval(this.timerAnim);
-          alert("💀 لقد دُمرت جميع بطاقاتك وخسرت المعركة!");
-          this.endMatch(false, isRanked);
-        } else if (oppAlive === 0) {
-          SFX.win();
-          clearInterval(this.timerAnim);
-          alert("👑 انتصار تكتيكي ساحق! أسقطت جميع بطاقات الخصم الحقيقي.");
-          this.endMatch(true, isRanked);
+          const won = (oppAlive === 0);
+          if (won) SFX.win(); else SFX.slash();
+
+          if (this.roomRef) { this.roomRef.off(); this.roomRef = null; }
+          Auth.recordResult(won, isRanked);
+
+          document.getElementById("resIcon").innerText = won ? "👑" : "💀";
+          document.getElementById("resTitle").innerText = won ? "انتصار تكتيكي ساحق!" : "سقطت بطاقاتك وخسرت النزال";
+          document.getElementById("resTitle").style.color = won ? "var(--gold)" : "var(--crimson)";
+          document.getElementById("resDesc").innerText = won
+            ? `تمكنت من قراءة عقل [${oppData.name}] وتدمير جميع بطاقاته.`
+            : `تمكن [${oppData.name}] من الإطاحة ببطاقاتك في هذه الجولة.`;
+          document.getElementById("resEloPill").innerText = isRanked ? (won ? "+30 ELO 🏆" : "-20 ELO") : "مباراة ودية / تدريبية (بدون خصم نقاط)";
+          document.getElementById("resultModal").style.display = "flex";
         }
       },
 
-      endMatch(won, isRanked) {
-        if (this.roomRef) {
-          this.roomRef.off();
-          this.roomRef = null;
-        }
-        Auth.recordResult(won, isRanked);
+      closeResultModal() {
+        SFX.click();
+        document.getElementById("resultModal").style.display = "none";
         View.to("viewLobby");
       },
 
-      async surrender() {
-        if (confirm("هل تريد الانسحاب؟ ستحتسب هزيمة فورية.")) {
-          this.endMatch(false, this.localState ? this.localState.isRanked : false);
+      async sendEmote(text) {
+        SFX.click();
+        const myName = (this.myRole === 'p1') ? this.localState.p1.name : this.localState.p2.name;
+        if (this.isOnline && this.roomRef) {
+          await this.roomRef.child("last_emote").set({ by: myName, text, time: Date.now() });
+        } else {
+          this.showEmoteBubble('my', text);
         }
       },
 
-      /* التدريب الفردي السريع */
-      startPracticeBot() {
-        SFX.click();
-        const p1Cards = [Matchmaking.deal(), Matchmaking.deal()];
-        const p2Cards = [Matchmaking.deal(), Matchmaking.deal()];
-        this.isOnline = false;
-        this.myRole = "p1";
-        this.localState = {
-          p1: { name: Auth.user ? Auth.user.username : "أنت", elo: 1000, coins: 2, cards: p1Cards },
-          p2: { name: "روبوت_التدريب", elo: 900, coins: 2, cards: p2Cards },
-          turn: Auth.user ? Auth.user.username : "أنت",
-          state: "ACTION",
-          isRanked: false,
-          timerEnd: Date.now() + 15000,
-          logs: ["بدأت مباراة التدريب الفردي."]
-        };
-        View.to("viewGame");
-        this.renderOnline();
+      showEmoteBubble(target, text) {
+        const cont = document.getElementById(target === 'my' ? "myEmoteContainer" : "oppEmoteContainer");
+        if (cont) cont.innerHTML = `<div class="emote-bubble">${text}</div>`;
       },
 
-      cardName(id) {
-        const map = { assassin: "القاتل", thief: "اللص", merchant: "التاجر", guardian: "الحارس" };
-        return map[id] || id;
+      surrender() {
+        if (!this.localState) return;
+        this.matchEnded = true;
+        clearInterval(this.timerAnim);
+        if (this.roomRef) { this.roomRef.off(); this.roomRef = null; }
+        Auth.recordResult(false, this.localState.isRanked);
+        triggerHudToast("انسحبت من المواجهة");
+        View.to("viewLobby");
       }
     };
 
-    /* =========================================================================
-       6. إدارة المشاهد (Navigation)
-       ========================================================================= */
     const View = {
       to(id) {
         document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
